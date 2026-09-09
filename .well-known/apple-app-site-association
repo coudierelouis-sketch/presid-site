@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["BF25CXYSY3.com.louis.coudiere.presid"],
+        "components": [
+          { "/": "/duo", "comment": "comparaison entre proches" },
+          { "/": "/duo*", "comment": "comparaison entre proches, avec le code en paramètre" }
+        ]
+      }
+    ]
+  }
+}

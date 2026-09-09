@@ -1,0 +1,470 @@
+/* Bricolage Grotesque (SIL Open Font License 1.1) — hébergée ici :
+   aucune requête vers un tiers depuis presid.app. */
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 400 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/bricolage-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 400 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(fonts/bricolage-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* presid.app — direction « 2c Riso confetti », alignée sur src/lib/theme.ts de l'app.
+   Fond crème, aplats saturés, zéro ombre : la hiérarchie vient de la couleur et
+   de la taille. Ne jamais utiliser la palette de l'État (#000091 / #E1000F). */
+
+:root {
+  --creme:#FFFAF0;
+  --surface:#FFFFFF;
+  --creux:#F1ECE0;
+  --bord:#E7DFCC;
+  --bord-fort:#D9CFB4;
+  --encre:#1B1B2E;
+  --encre-2:#6F6A80;
+  --encre-3:#8D86A8;
+  --bleu:#2B3BD6;
+  --bleu-profond:#1A2699;
+  --rouge:#FF5A3D;
+  --rouge-profond:#C33417;
+  --jaune:#FFE066;
+  --sur-jaune:#7A6317;
+  --vert:#0D8050;
+  --vert-clair:#A6D75B;
+  --ciel:#8ADEFF;
+  --sable:#E9E2D0;
+  --or:#F0CF4E;
+  --r:20px;
+  --r-pilule:999px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--creme);
+  color:var(--encre);
+  font-family:"Bricolage Grotesque",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;
+  line-height:1.6;
+  font-optical-sizing:auto;
+  -webkit-font-smoothing:antialiased;
+}
+
+.enveloppe{ max-width:64rem; margin:0 auto; padding:0 1.5rem; }
+.etroit{ max-width:42rem; }
+
+/* ---------- en-tête ---------- */
+.entete{ padding:1.75rem 0 0; }
+.entete-rangee{ display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.marque{ font-size:1.5rem; font-weight:800; letter-spacing:-.04em; text-decoration:none; color:var(--encre); }
+.marque .point{ color:var(--rouge); }
+.nav{ display:flex; gap:.5rem; flex-wrap:wrap; }
+.nav a{
+  font-size:.9375rem; font-weight:600; text-decoration:none; color:var(--encre);
+  background:var(--surface); border:1px solid var(--bord);
+  padding:.4rem .9rem; border-radius:var(--r-pilule);
+}
+.nav a:hover{ background:var(--jaune); border-color:var(--jaune); }
+.nav a[aria-current="page"]{ background:var(--encre); color:var(--creme); border-color:var(--encre); }
+
+/* ---------- titres ---------- */
+h1{ font-size:clamp(2.4rem,7vw,4rem); line-height:1.03; letter-spacing:-.035em; font-weight:800; margin:0 0 1rem; }
+h2{ font-size:clamp(1.5rem,3.6vw,2.1rem); line-height:1.12; letter-spacing:-.03em; font-weight:800; margin:3.5rem 0 1rem; }
+h3{ font-size:1.125rem; font-weight:700; letter-spacing:-.015em; margin:0 0 .4rem; }
+p{ margin:0 0 1rem; }
+.chapo{ font-size:clamp(1.0625rem,2.2vw,1.25rem); color:var(--encre-2); max-width:34rem; }
+.surligne{ background:var(--jaune); padding:0 .18em; border-radius:6px; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+
+a{ color:var(--bleu); text-underline-offset:3px; text-decoration-thickness:2px; }
+a:hover{ color:var(--bleu-profond); }
+
+/* ---------- boutons ---------- */
+.bouton{
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--bleu); color:#fff; font-weight:700; font-size:1.0625rem;
+  padding:.85rem 1.6rem; border-radius:var(--r-pilule); text-decoration:none;
+  border:2px solid var(--bleu);
+}
+.bouton:hover{ background:var(--bleu-profond); border-color:var(--bleu-profond); color:#fff; }
+.bouton.fantome{ background:transparent; color:var(--encre); border-color:var(--bord-fort); }
+.bouton.fantome:hover{ background:var(--jaune); border-color:var(--jaune); color:var(--encre); }
+.sous-bouton{ font-size:.9375rem; color:var(--encre-2); margin-top:.85rem; }
+
+/* ---------- héro ---------- */
+.hero{ padding-top:3rem; padding-bottom:1rem; }   /* jamais `padding` en raccourci : il écraserait celui de .enveloppe */
+.actions{ display:flex; gap:.75rem; flex-wrap:wrap; align-items:center; margin-top:1.75rem; }
+
+/* ---------- captures ---------- */
+.captures{
+  display:flex; gap:1rem; overflow-x:auto; padding:2.5rem 1.5rem 1rem;
+  /* la bande déborde à droite, mais son premier bord s'aligne sur la colonne de texte */
+  padding-left:max(1.5rem, calc((100% - 64rem) / 2 + 1.5rem));
+  scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.captures::-webkit-scrollbar{ display:none; }
+.capture{
+  width:100%;
+  border-radius:26px; overflow:hidden; border:1px solid var(--bord);
+  background:var(--surface);
+  -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
+}
+.capture img{ display:block; width:100%; height:auto; }
+
+/* ---------- grilles de cartes ---------- */
+.grille{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); }
+.carte{ background:var(--surface); border:1px solid var(--bord); border-radius:var(--r); padding:1.4rem 1.5rem; }
+.carte p{ margin:0; color:var(--encre-2); font-size:.9688rem; }
+.carte.jaune{ background:var(--jaune); border-color:var(--jaune); }
+.carte.jaune p{ color:var(--sur-jaune); }
+.carte.vert{ background:var(--vert-clair); border-color:var(--vert-clair); }
+.carte.vert p{ color:#31501A; }
+.carte.ciel{ background:var(--ciel); border-color:var(--ciel); }
+.carte.ciel p{ color:#0F4E66; }
+.carte.sable{ background:var(--sable); border-color:var(--sable); }
+.carte.sable p{ color:#5F5844; }
+.carte.or{ background:var(--or); border-color:var(--or); }
+.carte.or p{ color:#6A5411; }
+
+.numero{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:2rem; height:2rem; border-radius:var(--r-pilule);
+  background:var(--encre); color:var(--creme);
+  font-weight:800; font-size:.9375rem; margin-bottom:.85rem;
+}
+
+/* ---------- chiffres ---------- */
+.chiffres{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(10rem,1fr)); }
+.chiffre{ background:var(--creux); border-radius:var(--r); padding:1.25rem 1.4rem; }
+.chiffre .valeur{ font-size:2.5rem; font-weight:800; letter-spacing:-.04em; line-height:1; }
+.chiffre .libelle{ font-size:.9375rem; color:var(--encre-2); margin-top:.35rem; }
+
+/* ---------- encart ---------- */
+.encart{ background:var(--surface); border-left:5px solid var(--rouge); border-radius:0 var(--r) var(--r) 0; padding:1.25rem 1.5rem; margin:1.75rem 0; }
+.encart p:last-child{ margin-bottom:0; }
+
+/* ---------- listes ---------- */
+ul.liste{ list-style:none; padding:0; margin:0; }
+ul.liste li{ padding:.85rem 0; border-bottom:1px solid var(--bord); }
+ul.liste li:last-child{ border-bottom:0; }
+
+/* ---------- contact ---------- */
+.contacts{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(16rem,1fr)); }
+.contact{ background:var(--surface); border:1px solid var(--bord); border-radius:var(--r); padding:1.25rem 1.4rem; }
+.contact .nom{ font-weight:700; }
+.contact a{ font-weight:600; word-break:break-word; }
+
+/* ---------- pied ---------- */
+.pied{ margin-top:5rem; border-top:1px solid var(--bord); padding:2rem 0 4rem; color:var(--encre-2); font-size:.9375rem; }
+.pied a{ color:var(--encre-2); }
+.pied .liens{ display:flex; gap:1.25rem; flex-wrap:wrap; margin-bottom:1rem; }
+
+/* ---------- pages de texte ---------- */
+.texte h2{ font-size:1.25rem; margin:2.5rem 0 .5rem; }
+.texte p, .texte li{ color:var(--encre); }
+.date{ color:var(--encre-2); font-size:.9375rem; }
+
+@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+
+/* Champ légal non renseigné : visible exprès, pour qu'il ne parte pas en ligne inaperçu. */
+.acompleter{ background:var(--jaune); color:var(--sur-jaune); font-weight:700; padding:0 .35em; border-radius:6px; }
+
+/* ============================================================
+   LA RIVIÈRE
+   Reprise à l'identique du dépli de l'app (src/components/CarteSection.tsx) :
+   -10 px et scaleY 0,9 depuis le BORD HAUT, 280 ms, courbe décélérée,
+   70 ms de décalage par rang. Aucun ressort : « je voulais un truc qui se
+   déplie de haut en bas, pas en vibreur » (Louis, 15/08/2026).
+   Le rang est posé par anim.js ; le HTML reste lisible sans JavaScript.
+   ============================================================ */
+
+@keyframes depli {
+  from { opacity:0; transform:translateY(-10px) scaleY(.9); }
+  to   { opacity:1; transform:none; }
+}
+
+/* Ce qui coule : les enfants directs d'une rivière, et les cartes des
+   conteneurs qui, eux, ne sont qu'un support de mise en page. */
+html.anime .riviere:not(.coule) > *,
+html.anime .riviere:not(.coule) > .grille > *,
+html.anime .riviere:not(.coule) > .chiffres > *,
+html.anime .riviere:not(.coule) > .contacts > *,
+html.anime .riviere:not(.coule) > .liste > li {
+  opacity:0;
+}
+html.anime .riviere > *,
+html.anime .riviere > .grille > *,
+html.anime .riviere > .chiffres > *,
+html.anime .riviere > .contacts > *,
+html.anime .riviere > .liste > li { transform-origin:top; }
+html.anime .riviere > .grille,
+html.anime .riviere > .chiffres,
+html.anime .riviere > .contacts,
+html.anime .riviere > .liste { opacity:1; }
+
+html.anime .riviere.coule > *,
+html.anime .riviere.coule > .grille > *,
+html.anime .riviere.coule > .chiffres > *,
+html.anime .riviere.coule > .contacts > *,
+html.anime .riviere.coule > .liste > li {
+  animation:depli 280ms cubic-bezier(.215,.61,.355,1) backwards;
+  animation-delay:calc(var(--rang,0) * 70ms);
+}
+html.anime .riviere.coule > .grille,
+html.anime .riviere.coule > .chiffres,
+html.anime .riviere.coule > .contacts,
+html.anime .riviere.coule > .liste { animation:none; }
+
+/* Le surlignage jaune se pose au pinceau, après le dépli du titre. */
+.surligne{
+  background:none;
+  background-image:linear-gradient(var(--jaune),var(--jaune));
+  background-repeat:no-repeat;
+  background-position:left center;
+  background-size:100% 100%;
+}
+html.anime .riviere .surligne{ background-size:0% 100%; }
+html.anime .riviere.coule .surligne{
+  background-size:100% 100%;
+  transition:background-size 520ms cubic-bezier(.215,.61,.355,1) 300ms;
+}
+
+/* Les chiffres se comptent : chasse fixe, sinon la largeur tressaute. */
+.chiffre .valeur{ font-variant-numeric:tabular-nums; }
+
+/* Mouvement réduit : tout est là, tout de suite. */
+@media (prefers-reduced-motion:reduce){
+  html.anime .riviere:not(.coule) > *,
+  html.anime .riviere:not(.coule) > .grille > *,
+  html.anime .riviere:not(.coule) > .chiffres > *,
+  html.anime .riviere:not(.coule) > .contacts > *,
+  html.anime .riviere:not(.coule) > .liste > li { opacity:1; }
+  html.anime .riviere.coule > *,
+  html.anime .riviere.coule > .grille > *,
+  html.anime .riviere.coule > .chiffres > *,
+  html.anime .riviere.coule > .contacts > *,
+  html.anime .riviere.coule > .liste > li { animation:none; }
+  html.anime .riviere .surligne{ background-size:100% 100%; transition:none; }
+}
+
+/* ============================================================
+   LES QUATRE AUTRES MOUVEMENTS
+   Transposition riso de ce que faisait le site de Velk : des aplats qui
+   dérivent, un objet qui flotte, un point qui bat, des cartes qui se
+   soulèvent. Velk s'appuyait sur des ombres portées et des halos — la DA riso
+   les interdit, donc tout passe ici par la couleur, l'échelle et le calage.
+   ============================================================ */
+
+/* --- 1. Les confettis qui dérivent -------------------------------------
+   L'équivalent de l'« aurora » de Velk, mais en riso : des aplats NETS, pas
+   des halos flous, et `mix-blend-mode: multiply` — c'est exactement ce que
+   fait une riso quand deux passages de couleur se recouvrent. */
+.hero{ position:relative; isolation:isolate; }
+.confettis{
+  position:absolute; inset:0; z-index:-1;
+  overflow:hidden; pointer-events:none;
+}
+.confettis i{
+  position:absolute; display:block; border-radius:50%;
+  mix-blend-mode:multiply;
+  animation:derive 22s ease-in-out infinite alternate;
+}
+/* Calage : aucun aplat ne franchit la colonne de texte, et aucun ne se fait
+   couper à plat en haut — un cercle tranché net par un bord invisible passe
+   pour un bug d'affichage, pas pour un parti pris. Seul le bord droit de
+   l'écran a le droit de les rogner. */
+.confettis{ opacity:.7; }
+/* Tout reste DANS la colonne : `.confettis` épouse `.enveloppe`, donc un aplat
+   qui déborderait à droite se ferait trancher net par le bord de la colonne,
+   ce qui se lit comme un bug. La marge de 1,5 rem absorbe aussi le
+   grossissement de la dérive. */
+.confettis i:nth-child(1){ width:15rem;  height:15rem;  right:2rem;    top:1.25rem; background:var(--jaune);      animation-duration:24s; }
+.confettis i:nth-child(2){ width:5rem;   height:5rem;   right:15rem;   top:13.5rem; background:var(--vert-clair); animation-duration:27s; animation-delay:-11s; }
+.confettis i:nth-child(3){ width:3.5rem; height:3.5rem; right:.5rem;   top:2rem;    background:var(--rouge);      animation-duration:21s; animation-delay:-3s; }
+/* Le quatrième aplat a été retiré quand le deck a pris la place : quatre
+   cercles derrière une pile de cartes, ça devenait un fond d'écran. */
+.confettis i:nth-child(4){ display:none; }
+@keyframes derive{ to{ transform:translate(-1.6rem,1.2rem) scale(1.06); } }
+
+/* Sous 60rem la colonne de texte occupe toute la largeur : les aplats
+   passeraient sous les mots. On les efface plutôt que de les délaver. */
+@media (max-width:60rem){ .confettis{ display:none; } }
+
+/* --- 2. Le point de la marque, qui bat --------------------------------
+   Velk avait une pastille « live » sur son bouton. Ici c'est le point du
+   wordmark : le seul endroit où la marque a déjà un battement. */
+.marque .point{ display:inline-block; animation:battement 2.8s ease-in-out infinite; }
+@keyframes battement{ 50%{ opacity:.45; transform:scale(.78); } }
+
+/* --- 3. Les captures qui flottent -------------------------------------
+   Le téléphone de Velk flottait sur 7 s. Ici il y en a cinq : chacune est
+   déphasée, sinon la bande respire d'un seul bloc et ça fait vague.
+   Le dépli vit sur l'enveloppe, le flottement sur la carte : deux
+   transformations sur deux éléments, jamais sur le même. */
+.capture-flot{ flex:0 0 auto; width:min(260px,68vw); scroll-snap-align:center; }
+.capture{ animation:flotte 9s ease-in-out infinite; }
+.capture-flot:nth-child(2) .capture{ animation-delay:-1.8s; }
+.capture-flot:nth-child(3) .capture{ animation-delay:-3.6s; }
+.capture-flot:nth-child(4) .capture{ animation-delay:-5.4s; }
+.capture-flot:nth-child(5) .capture{ animation-delay:-7.2s; }
+@keyframes flotte{ 50%{ transform:translateY(-7px); } }
+
+/* --- 4. Ce qui se soulève au survol -----------------------------------
+   Velk montait ses cartes de 4 px et son bouton de 2. On garde les valeurs :
+   elles sont justes. Sans ombre, c'est le décalage seul qui fait le relief. */
+.carte, .chiffre, .contact, .capture-flot, .nav a, .bouton{
+  transition:transform .2s cubic-bezier(.215,.61,.355,1), background-color .2s, border-color .2s, color .2s;
+}
+.carte:hover, .chiffre:hover, .contact:hover{ transform:translateY(-4px); }
+.bouton:hover{ transform:translateY(-2px) scale(1.02); }
+.nav a:hover{ transform:translateY(-2px); }
+.capture-flot:hover{ transform:translateY(-6px); }
+
+/* --- 5. Les 31 pastilles du corpus ------------------------------------
+   L'équivalent de l'anneau qui se dessinait chez Velk : une figure qui se
+   remplit toute seule. Ici elle DIT quelque chose — une pastille par
+   personnalité suivie, pleine si elle franchit le seuil des cinq positions.
+   Volontairement une grille et non un hémicycle : une demi-couronne de
+   pastilles bleues se lirait comme une projection de sièges, ce que presid
+   n'est pas. */
+.pastilles{ display:flex; flex-wrap:wrap; gap:.55rem; margin:1.5rem 0 .75rem; }
+.pastille{
+  width:1.35rem; height:1.35rem; border-radius:50%;
+  background:var(--bleu);
+}
+.pastille.sous-seuil{ background:transparent; border:2px solid var(--bord-fort); }
+html.anime .riviere:not(.coule) .pastille{ opacity:0; }
+html.anime .riviere.coule .pastille{
+  animation:eclot 320ms cubic-bezier(.215,.61,.355,1) backwards;
+  animation-delay:calc(300ms + var(--i,0) * 26ms);
+}
+@keyframes eclot{ from{ opacity:0; transform:scale(.2); } to{ opacity:1; transform:none; } }
+.legende{ display:flex; gap:1.25rem; flex-wrap:wrap; font-size:.875rem; color:var(--encre-2); }
+.legende span{ display:inline-flex; align-items:center; gap:.45rem; }
+.legende i{ width:.8rem; height:.8rem; border-radius:50%; background:var(--bleu); }
+.legende i.vide{ background:transparent; border:2px solid var(--bord-fort); }
+
+/* Mouvement réduit : rien ne dérive, rien ne flotte, rien ne bat. */
+@media (prefers-reduced-motion:reduce){
+  .confettis i, .marque .point, .capture{ animation:none; }
+  .carte:hover, .chiffre:hover, .contact:hover,
+  .bouton:hover, .nav a:hover, .capture-flot:hover{ transform:none; }
+  html.anime .riviere:not(.coule) .pastille{ opacity:1; }
+  html.anime .riviere.coule .pastille{ animation:none; }
+}
+
+/* Le décor n'est pas dans la rivière : il est déjà là quand elle arrive. */
+html.anime .riviere > .confettis{ opacity:1; animation:none; }
+
+/* ============================================================
+   LE GESTE — une carte qu'on swipe pour de vrai
+   L'objet du héros. Chez Velk c'était un téléphone qui flottait ; ici c'est
+   la seule chose que presid fait et qu'aucune capture ne montre. Et comme on
+   peut la manipuler, elle démontre aussi la promesse : on swipe, et rien ne
+   part nulle part. Huit énoncés RÉELS du corpus, trois de gauche, trois de
+   droite, deux transversaux, alternés — un héros qui ne penche pas. Aucun nom
+   sur la carte : la règle du produit vaut aussi sur le site.
+   Le mouvement vit dans deck.js ; ici il n'y a que les trois positions de la
+   pile et la façon d'aller de l'une à l'autre.
+   ============================================================ */
+
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 19rem;
+  column-gap:3.5rem;
+  align-items:start;
+}
+.hero > h1, .hero > .chapo, .hero > .actions, .hero > .sous-bouton{ grid-column:1; }
+.hero > .confettis{ grid-area:1 / 1 / -1 / -1; }
+.hero > .deck{ grid-column:2; grid-row:1 / span 4; align-self:center; }
+
+.deck{ display:flex; flex-direction:column; gap:1.1rem; }
+.pile{ position:relative; height:13rem; }
+.pile:focus-visible{ outline:3px solid var(--bleu); outline-offset:8px; border-radius:26px; }
+
+.sujet{
+  position:absolute; inset:0;
+  border-radius:24px; padding:1.3rem 1.4rem;
+  display:flex; flex-direction:column; gap:.9rem;
+  overflow:hidden;
+  /* Hors des trois premières places, la carte n'existe pas encore. */
+  opacity:0; pointer-events:none; z-index:0;
+  transform:translateY(1.5rem) scale(.9);
+  transition:transform .32s cubic-bezier(.215,.61,.355,1), opacity .32s;
+}
+.sujet.p0{ transform:none;                        opacity:1; z-index:3; pointer-events:auto; cursor:grab;
+           /* pan-y et pas none : un pouce qui part vers le haut depuis la carte
+              doit continuer à faire défiler la page. Seul l'horizontal est à
+              nous. Avec `none`, le téléphone se bloquait sur la carte. */
+           touch-action:pan-y; }
+.sujet.p1{ transform:translateY(.75rem) scale(.95); opacity:1; z-index:2; }
+.sujet.p2{ transform:translateY(1.5rem) scale(.9);  opacity:1; z-index:1; }
+/* Pendant la prise en main, la carte colle au doigt : aucune transition. */
+.sujet.tire{ transition:none; cursor:grabbing; }
+/* Remise au fond de la pile : instantanée, sinon la carte revient en glissant
+   depuis l'endroit où elle vient de sortir. */
+.sujet.mute{ transition:none; }
+/* La sortie est la seule courbe ACCÉLÉRÉE du site : un swipe se lance, il ne
+   se pose pas. */
+.sujet.sort{ transition:transform .42s cubic-bezier(.55,0,.85,.35), opacity .42s ease-in; }
+
+.sujet::after{
+  content:''; position:absolute; right:-3rem; top:-3rem;
+  width:9rem; height:9rem; border-radius:50%;
+  background:rgba(27,27,46,.05);
+}
+.sujet p{ margin:auto 0 0; font-size:1.28rem; line-height:1.24; font-weight:800; letter-spacing:-.025em; color:var(--encre); }
+.sujet .theme{
+  align-self:flex-start; color:#fff; font-size:.75rem; font-weight:700;
+  padding:.3rem .8rem; border-radius:var(--r-pilule);
+}
+.sujet.social       { background:#FFD9D0; } .sujet.social .theme       { background:#9E2703; }
+.sujet.economie     { background:#FFE066; } .sujet.economie .theme     { background:#7A5200; }
+.sujet.securite     { background:#A8E8FF; } .sujet.securite .theme     { background:#0F4E69; }
+.sujet.ecologie     { background:#C9F27A; } .sujet.ecologie .theme     { background:#2E5C14; }
+.sujet.immigration  { background:#C7D2FF; } .sujet.immigration .theme  { background:#1A2699; }
+.sujet.institutions { background:#EDE7D6; } .sujet.institutions .theme { background:#5C5340; }
+
+/* Les quatre votes : de vrais boutons, pour qui n'a ni souris ni doigt. Le
+   glyphe autant que la couleur, comme dans l'app. */
+.votes{ display:flex; justify-content:center; gap:1.1rem; }
+.votes button{
+  width:2.1rem; height:2.1rem; border-radius:50%; border:0; padding:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:transform .18s cubic-bezier(.215,.61,.355,1);
+}
+.votes svg{ width:1.1rem; height:1.1rem; fill:none; stroke:#fff; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+.votes .deteste{ background:#8E2410; }
+.votes .contre { background:#C0361A; }
+.votes .pour   { background:#0D8050; }
+.votes .adore  { background:#065C39; }
+.votes button:hover, .votes button:focus-visible{ transform:scale(1.14); }
+.votes button:focus-visible{ outline:3px solid var(--bleu); outline-offset:3px; }
+/* Le bouton se marque quand la carte part de ce côté — au doigt comme au
+   clavier, c'est le même retour. */
+.votes button.vise{ transform:scale(1.24); }
+
+.essai{ margin:0; text-align:center; font-size:.875rem; color:var(--encre-2); }
+
+/* Une colonne : le geste passe sous le texte, et les aplats disparaissent. */
+@media (max-width:60rem){
+  .hero{ grid-template-columns:minmax(0,1fr); }
+  .hero > .deck{ grid-column:1; grid-row:auto; margin:2.5rem auto 1rem; width:min(19rem,100%); }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .sujet, .votes button{ transition:none; }
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>presid — assistance</title>
+<meta name="description" content="Assistance de l'application presid : questions fréquentes, signalement d'erreur, contact.">
+<link rel="canonical" href="https://presid.app/assistance">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<script>
+/* Masque les éléments avant la première peinture, pour que la rivière parte de
+   zéro. Filet : si anim.js n'a pas tourné, tout redevient visible au bout
+   d'1,5 s — une page qui ne s'anime pas vaut mieux qu'une page vide. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
+  }
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
+</head>
+<body>
+
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+    <nav class="nav">
+      <a href="assistance.html" aria-current="page">Assistance</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="enveloppe etroit texte">
+  <div class="riviere">
+  <h1 style="font-size:clamp(2rem,5vw,2.75rem);margin-top:2.5rem">Assistance</h1>
+  <p class="chapo">Écrivez à
+    <a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a>.
+    Les questions les plus fréquentes portent sur quatre points, tous traités
+    directement dans l'application.</p>
+  </div>
+
+  <h2>Pourquoi ce classement ?</h2>
+  <p>L'onglet Résultat détaille, sujet par sujet, ce qui vous rapproche d'une
+  personnalité et ce qui vous en éloigne. Chaque ligne renvoie à la source qui
+  prouve la position affichée, avec sa date.</p>
+
+  <h2>Pourquoi cette personne n'apparaît-elle pas ?</h2>
+  <p>Une personnalité n'est classée qu'à partir de cinq positions prouvées. En
+  dessous du seuil, elle reste consultable dans l'onglet Sujets mais n'entre
+  jamais au classement. C'est un manque de sources publiques, jamais un
+  jugement sur la personne — et le seuil existe pour éviter les scores
+  spectaculaires calculés sur deux réponses.</p>
+
+  <h2>Pourquoi certaines positions datent de 2022 ?</h2>
+  <p>Quand les seules déclarations disponibles remontent à la campagne
+  précédente, l'app l'écrit noir sur blanc à côté du score. Une position
+  ancienne vaut mieux qu'une position inventée, à condition d'être signalée
+  comme ancienne.</p>
+
+  <h2>Comment effacer mes réponses ?</h2>
+  <p>Onglet Profil, tout en bas. L'effacement est immédiat et définitif : rien
+  n'est sauvegardé ailleurs que sur votre téléphone, donc rien ne permet de
+  restaurer une session. Désinstaller l'application produit le même effet.</p>
+
+  <h2>Signaler une erreur</h2>
+  <p>Une position mal attribuée, une source périmée, un lien mort, un candidat
+  qui s'est retiré : signalez-le à
+  <a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a> en
+  citant le sujet concerné. La correction d'une donnée fausse passe avant tout
+  autre chantier.</p>
+
+  <h2>Proposer une position manquante</h2>
+  <p>Si une personnalité s'est prononcée sur un sujet et que l'app l'ignore,
+  envoyez le lien vers la déclaration, le programme ou le scrutin. Une position
+  n'est ajoutée que si le document tranche l'énoncé sans interprétation.</p>
+
+  <h2>Équipes de campagne</h2>
+  <p>Si vous représentez une personnalité présente dans l'app et souhaitez
+  faire corriger une position, ou en documenter de nouvelles, écrivez à
+  <a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a>.
+  Toute correction sourcée est appliquée.</p>
+</main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="index.html">Accueil</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="https://apps.apple.com/fr/app/id6800288453">App Store</a>
+    </div>
+    <p>© 2026 Louis Coudière. presid n'est affilié à aucun parti, aucun
+      candidat ni aucune institution publique.</p>
+  </div>
+</footer>
+
+</body>
+</html>

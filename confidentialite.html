@@ -3,45 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
 <title>presid — politique de confidentialité</title>
 <meta name="description" content="Politique de confidentialité de l'application presid : aucune donnée collectée.">
-<style>
-  :root { --fond:#F2F4F9; --encre:#141A33; --accent:#FF2447; --gris:#5A6079; }
-  * { box-sizing:border-box; }
-  body { margin:0; padding:0 1.25rem 4rem; background:var(--fond); color:var(--encre);
-         font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  main { max-width:38rem; margin:0 auto; }
-  header { padding:4rem 0 2rem; }
-  .marque { font-size:1.5rem; font-weight:800; letter-spacing:-.03em; }
-  .marque span { color:var(--accent); }
-  h1 { font-size:2rem; letter-spacing:-.02em; margin:.75rem 0 .25rem; }
-  .date { color:var(--gris); font-size:.9375rem; }
-  h2 { font-size:1.125rem; margin:2.5rem 0 .5rem; }
-  a { color:var(--encre); text-decoration-color:var(--accent); text-underline-offset:3px; }
-  .fort { background:#fff; border-left:3px solid var(--accent); padding:1rem 1.25rem;
-          margin:1.5rem 0; border-radius:0 8px 8px 0; }
-  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid #D8DCE8;
-           color:var(--gris); font-size:.875rem; }
-  @media (prefers-color-scheme:dark) {
-    :root { --fond:#0E1226; --encre:#F2F4F9; --accent:#FF3D5C; --gris:#9AA1BC; }
-    .fort { background:#171C34; }
-    footer { border-top-color:#242A45; }
-    a { color:var(--encre); }
+<link rel="canonical" href="https://presid.app/confidentialite">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<script>
+/* Masque les éléments avant la première peinture, pour que la rivière parte de
+   zéro. Filet : si anim.js n'a pas tourné, tout redevient visible au bout
+   d'1,5 s — une page qui ne s'anime pas vaut mieux qu'une page vide. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
   }
-</style>
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
 </head>
 <body>
-<main>
-  <header>
-    <div class="marque"><a href="index.html" style="text-decoration:none;color:inherit">presid<span>.</span></a></div>
-    <h1>Politique de confidentialité</h1>
-    <p class="date">En vigueur au 11 août 2026.</p>
-  </header>
 
-  <div class="fort">
-    <strong>presid ne collecte aucune donnée.</strong> Pas de compte, pas de
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+    <nav class="nav">
+      <a href="assistance.html">Assistance</a>
+      <a href="confidentialite.html" aria-current="page">Confidentialité</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="enveloppe etroit texte">
+  <div class="riviere">
+  <h1 style="font-size:clamp(2rem,5vw,2.75rem);margin-top:2.5rem">Politique de confidentialité</h1>
+  <p class="date">En vigueur au 11 août 2026. Adresse de contact mise à jour le
+    8 septembre 2026 — le traitement des données, lui, n'a pas changé : il
+    n'existe pas.</p>
+
+  <div class="encart">
+    <p><strong>presid ne collecte aucune donnée.</strong> Pas de compte, pas de
     serveur, pas de mesure d'audience, pas de publicité, pas de traceur.
-    Vos réponses ne quittent jamais votre téléphone.
+    Vos réponses ne quittent jamais votre téléphone.</p>
+  </div>
   </div>
 
   <h2>Ce qui est enregistré, et où</h2>
@@ -63,9 +68,16 @@
   navigateur : à partir de là, c'est la politique de confidentialité de ce
   site qui s'applique, et presid n'a plus aucun rôle.</p>
   <p><strong>Partager une carte.</strong> Exporter votre résultat ouvre la
-  feuille de partage d'iOS. L'image est fabriquée sur votre téléphone, et
+  feuille de partage du système. L'image est fabriquée sur votre téléphone, et
   c'est vous qui choisissez si elle part, et vers où. Rien n'est envoyé sans
   cette action.</p>
+
+  <h2>Ce site</h2>
+  <p>Ce site est un site statique : il n'utilise ni cookie, ni traceur, ni
+  outil de mesure d'audience, et aucun script de mesure ou de traçage. La police de
+  caractères est hébergée avec le site : votre navigateur ne contacte aucun
+  tiers, pas même Google&nbsp;Fonts. Les seuls liens sortants sont ceux que
+  vous choisissez de suivre.</p>
 
   <h2>Enfants</h2>
   <p>L'application ne s'adresse pas spécifiquement aux enfants et ne collecte
@@ -84,12 +96,21 @@
   collecter quoi que ce soit, cela serait annoncé ici avant la mise à jour.</p>
 
   <h2>Contact</h2>
-  <p><a href="mailto:presid.app@proton.me">presid.app@proton.me</a></p>
-
-  <footer>
-    Édité par Louis Coudière · presid n'est affilié à aucun parti, aucun
-    candidat ni aucune institution publique.
-  </footer>
+  <p><a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a></p>
 </main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="index.html">Accueil</a>
+      <a href="assistance.html">Assistance</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="https://apps.apple.com/fr/app/id6800288453">App Store</a>
+    </div>
+    <p>© 2026 Louis Coudière. presid n'est affilié à aucun parti, aucun
+      candidat ni aucune institution publique.</p>
+  </div>
+</footer>
+
 </body>
 </html>

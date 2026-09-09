@@ -3,70 +3,258 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>presid — assistance</title>
-<meta name="description" content="Assistance de l'application presid : situez vos idées avant la présidentielle 2027.">
-<style>
-  :root { --fond:#F2F4F9; --encre:#141A33; --accent:#FF2447; --gris:#5A6079; }
-  * { box-sizing:border-box; }
-  body { margin:0; padding:0 1.25rem 4rem; background:var(--fond); color:var(--encre);
-         font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  main { max-width:38rem; margin:0 auto; }
-  header { padding:4rem 0 2.5rem; }
-  .marque { font-size:2.5rem; font-weight:800; letter-spacing:-.03em; }
-  .marque span { color:var(--accent); }
-  .accroche { color:var(--gris); font-size:1.125rem; margin-top:.5rem; }
-  h2 { font-size:1.125rem; margin:2.5rem 0 .5rem; }
-  a { color:var(--encre); text-decoration-color:var(--accent); text-underline-offset:3px; }
-  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid #D8DCE8;
-           color:var(--gris); font-size:.875rem; }
-  @media (prefers-color-scheme:dark) {
-    :root { --fond:#0E1226; --encre:#F2F4F9; --accent:#FF3D5C; --gris:#9AA1BC; }
-    footer { border-top-color:#242A45; }
-    a { color:var(--encre); }
+<meta name="color-scheme" content="light">
+<title>presid — situez vos idées avant 2027</title>
+<meta name="description" content="presid compare vos réponses aux positions publiques et sourcées des personnalités de la présidentielle 2027. Aucune donnée collectée, aucun compte, aucun serveur.">
+<link rel="canonical" href="https://presid.app/">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="apple-touch-icon" href="images/icone.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="presid">
+<meta property="og:title" content="presid — situez vos idées avant 2027">
+<meta property="og:description" content="Swipe des idées, pas des visages. Chaque position affichée renvoie au document qui la prouve.">
+<meta property="og:url" content="https://presid.app/">
+<meta property="og:image" content="https://presid.app/images/partage.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script>
+/* Masque les éléments avant la première peinture, pour que la rivière parte de
+   zéro. Filet : si anim.js n'a pas tourné, tout redevient visible au bout
+   d'1,5 s — une page qui ne s'anime pas vaut mieux qu'une page vide. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
   }
-</style>
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
+<script src="deck.js" defer></script>
 </head>
 <body>
+
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+    <nav class="nav">
+      <a href="assistance.html">Assistance</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <header>
-    <div class="marque">presid<span>.</span></div>
-    <p class="accroche">Situez vos idées avant 2027.</p>
-  </header>
 
-  <p>presid compare vos réponses aux positions publiques et sourcées des
-  personnalités de la présidentielle 2027. Chaque position affichée renvoie à
-  la déclaration ou au document qui la prouve.</p>
+  <section class="enveloppe hero riviere">
+    <div class="confettis" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>Swipe des idées,<br>pas des <span class="surligne">visages.</span></h1>
+    <p class="chapo">presid vous fait voter sur des sujets, puis vous montre
+      quelles personnalités de la présidentielle 2027 pensent comme vous — et
+      sur quelles preuves.</p>
+    <div class="actions">
+      <a class="bouton" href="https://apps.apple.com/fr/app/id6800288453">Télécharger sur l'App&nbsp;Store</a>
+      <a class="bouton fantome" href="#methode">Comment c'est calculé</a>
+    </div>
+    <p class="sous-bouton">Gratuit · sans compte · sans publicité · aucune donnée collectée.
+      iOS&nbsp;16.4 ou plus récent. Android en préparation.</p>
+    <div class="deck">
+      <div class="pile" role="group" aria-label="Un sujet à trancher" aria-describedby="mode-emploi-deck" tabindex="0">
+        <article class="sujet social"><span class="theme">Social</span><p>Abroger le report de l&#x27;âge légal de départ à la retraite à 64 ans</p></article>
+        <article class="sujet economie"><span class="theme">Économie</span><p>Alléger les impôts et cotisations qui pèsent sur les entreprises</p></article>
+        <article class="sujet ecologie"><span class="theme">Écologie</span><p>Contraindre les transports les plus polluants, quitte à les renchérir ou les interdire</p></article>
+        <article class="sujet securite"><span class="theme">Sécurité</span><p>Renforcer les moyens de la police, de la justice et des prisons</p></article>
+        <article class="sujet economie"><span class="theme">Économie</span><p>Faire payer davantage les plus grandes fortunes et les plus hauts revenus</p></article>
+        <article class="sujet immigration"><span class="theme">Immigration</span><p>Limiter strictement l&#x27;entrée de nouveaux immigrants sur le territoire français</p></article>
+        <article class="sujet institutions"><span class="theme">Institutions</span><p>Permettre à des citoyens de déclencher eux-mêmes un référendum, sans passer par le Parlement</p></article>
+        <article class="sujet social"><span class="theme">Social</span><p>Autoriser une aide médicale à mourir pour les malades en fin de vie</p></article>
+      </div>
+      <div class="votes">
+        <button type="button" class="deteste" data-vote="deteste" aria-label="Je déteste"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 6 6-6M6 13l6 6 6-6"/></svg></button>
+        <button type="button" class="contre" data-vote="contre" aria-label="Contre"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg></button>
+        <button type="button" class="pour" data-vote="pour" aria-label="Pour"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l5 5 9-11"/></svg></button>
+        <button type="button" class="adore" data-vote="adore" aria-label="J'adore"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17l6-6 6 6M6 11l6-6 6 6"/></svg></button>
+      </div>
+      <p class="essai" id="mode-emploi-deck">Essayez : swipez la carte, ou utilisez les flèches. Rien n'est enregistré.</p>
+    </div>
+  </section>
 
-  <h2>Besoin d'aide ?</h2>
-  <p>Écrivez à <a href="mailto:presid.app@proton.me">presid.app@proton.me</a>.
-  Les questions les plus fréquentes portent sur trois points, traités
-  directement dans l'app :</p>
-  <ul>
-    <li><strong>Pourquoi ce classement ?</strong> L'onglet Résultat détaille,
-      sujet par sujet, ce qui vous rapproche et ce qui vous éloigne.</li>
-    <li><strong>Pourquoi cette personne n'apparaît pas ?</strong> Une
-      personnalité n'est classée qu'à partir de cinq positions prouvées. En
-      dessous, elle reste consultable mais jamais classée — c'est un manque de
-      sources, pas un jugement.</li>
-    <li><strong>Comment effacer mes réponses ?</strong> Onglet Profil, en bas.
-      L'effacement est immédiat et définitif : rien n'est sauvegardé ailleurs
-      que sur votre téléphone.</li>
-  </ul>
+  <div class="captures riviere" aria-label="Aperçus de l'application">
+    <div class="capture-flot"><div class="capture"><img src="images/01_geste.png" width="720" height="1069" alt="Un sujet à trancher : alléger les impôts et cotisations qui pèsent sur les entreprises. Aucun nom de personnalité sur la carte." loading="lazy"></div></div>
+    <div class="capture-flot"><div class="capture"><img src="images/02_resultat.png" width="720" height="1069" alt="Le podium des affinités, en pourcentages, et le classement complet." loading="lazy"></div></div>
+    <div class="capture-flot"><div class="capture"><img src="images/04_corpus.png" width="720" height="1069" alt="L'onglet Sujets : sept thèmes, vingt sujets qui divisent." loading="lazy"></div></div>
+    <div class="capture-flot"><div class="capture"><img src="images/05_sources_2.png" width="720" height="1069" alt="L'écran Programme : chaque mesure d'une personnalité, avec le lien vers la source qui la prouve." loading="lazy"></div></div>
+    <div class="capture-flot"><div class="capture"><img src="images/03_carte.png" width="720" height="1069" alt="La carte à partager : où l'on siégerait à l'Assemblée." loading="lazy"></div></div>
+  </div>
 
-  <h2>Signaler une erreur</h2>
-  <p>Une position mal attribuée, une source périmée, un candidat qui s'est
-  retiré : signalez-le à la même adresse en citant le sujet concerné. La
-  correction d'une donnée fausse passe avant toute autre chose.</p>
+  <section class="enveloppe riviere">
+    <h2>Comment ça marche</h2>
+    <div class="grille">
+      <div class="carte jaune">
+        <div class="numero">1</div>
+        <h3>Vous tranchez des sujets</h3>
+        <p>Des énoncés généraux — le nucléaire, la retraite, l'AME —
+          sur lesquels plusieurs personnalités se sont réellement prononcées.
+          Pour, contre, ou plus fort si le sujet compte pour vous.</p>
+      </div>
+      <div class="carte ciel">
+        <div class="numero">2</div>
+        <h3>Aucun nom avant votre vote</h3>
+        <p>C'est la règle du jeu, et elle n'a pas d'exception : ni photo, ni
+          nom, ni parti sur la carte. Vous répondez à l'idée, pas à la tête
+          de celui qui la porte.</p>
+      </div>
+      <div class="carte vert">
+        <div class="numero">3</div>
+        <h3>Le calcul reste sur votre téléphone</h3>
+        <p>L'app n'a pas de serveur. Vos réponses ne partent nulle part, et
+          le classement se fabrique hors ligne, chez vous.</p>
+      </div>
+    </div>
+  </section>
 
-  <h2>Méthode</h2>
-  <p>presid n'appelle à voter pour personne. L'app ne collecte aucune donnée,
-  ne demande aucun compte et fonctionne sans serveur.
-  <a href="confidentialite.html">Politique de confidentialité</a>.</p>
+  <section class="enveloppe riviere" id="methode">
+    <h2>La méthode</h2>
+    <p class="chapo">L'argument de presid n'est pas le résultat, c'est ce qui
+      le rend vérifiable. Quatre règles, tenues sans exception.</p>
 
-  <footer>
-    Édité par Louis Coudière · presid n'est affilié à aucun parti, aucun
-    candidat ni aucune institution publique.
-  </footer>
+    <ul class="liste">
+      <li><strong>Une position, une preuve.</strong> Une personnalité n'est
+        rattachée à un camp que si un document tranche l'énoncé sans
+        raisonnement intermédiaire : une déclaration, un programme, un scrutin
+        nominatif à l'Assemblée. Rien n'est déduit d'une appartenance
+        partisane — au scrutin sur le narcotrafic, deux députés du même bord
+        ont voté à l'opposé l'un de l'autre.</li>
+      <li><strong>Cinq positions minimum pour être classé.</strong> En dessous,
+        une personnalité reste consultable mais n'apparaît jamais au
+        classement. C'est un manque de sources, pas un jugement — et ça évite
+        les scores spectaculaires calculés sur deux réponses.</li>
+      <li><strong>Un sujet sans camp adverse prouvé est supprimé.</strong> Six
+        sujets ont disparu du corpus pour cette raison, dont le SMIC et la
+        sortie de l'Union européenne : le camp « contre » n'y était documenté
+        nulle part.</li>
+      <li><strong>Les égalités ne sont pas départagées au hasard.</strong>
+        Chaque téléphone tire son propre départage, une fois pour toutes. Deux
+        personnes à égalité parfaite ne verront pas le même ordre — et
+        personne ne bénéficie d'un avantage national.</li>
+    </ul>
+
+    <div class="encart">
+      <p><strong>presid n'appelle à voter pour personne.</strong> Un
+        pourcentage d'affinité n'est pas une recommandation : il dit combien de
+        vos réponses coïncident avec des positions documentées, sur les sujets
+        que vous avez tranchés. Rien de plus.</p>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Le corpus, au 8 septembre 2026</h2>
+    <div class="chiffres">
+      <div class="chiffre"><div class="valeur" data-compte="20">20</div><div class="libelle">sujets tranchés</div></div>
+      <div class="chiffre"><div class="valeur" data-compte="341">341</div><div class="libelle">propositions sourcées</div></div>
+      <div class="chiffre"><div class="valeur" data-compte="156">156</div><div class="libelle">positions prouvées</div></div>
+      <div class="chiffre"><div class="valeur" data-compte="21">21</div><div class="libelle">personnalités classables</div></div>
+    </div>
+    <div class="pastilles" aria-hidden="true">
+      <span class="pastille" style="--i:0"></span>
+      <span class="pastille" style="--i:1"></span>
+      <span class="pastille" style="--i:2"></span>
+      <span class="pastille" style="--i:3"></span>
+      <span class="pastille" style="--i:4"></span>
+      <span class="pastille" style="--i:5"></span>
+      <span class="pastille" style="--i:6"></span>
+      <span class="pastille" style="--i:7"></span>
+      <span class="pastille" style="--i:8"></span>
+      <span class="pastille" style="--i:9"></span>
+      <span class="pastille" style="--i:10"></span>
+      <span class="pastille" style="--i:11"></span>
+      <span class="pastille" style="--i:12"></span>
+      <span class="pastille" style="--i:13"></span>
+      <span class="pastille" style="--i:14"></span>
+      <span class="pastille" style="--i:15"></span>
+      <span class="pastille" style="--i:16"></span>
+      <span class="pastille" style="--i:17"></span>
+      <span class="pastille" style="--i:18"></span>
+      <span class="pastille" style="--i:19"></span>
+      <span class="pastille" style="--i:20"></span>
+      <span class="pastille sous-seuil" style="--i:21"></span>
+      <span class="pastille sous-seuil" style="--i:22"></span>
+      <span class="pastille sous-seuil" style="--i:23"></span>
+      <span class="pastille sous-seuil" style="--i:24"></span>
+      <span class="pastille sous-seuil" style="--i:25"></span>
+      <span class="pastille sous-seuil" style="--i:26"></span>
+      <span class="pastille sous-seuil" style="--i:27"></span>
+      <span class="pastille sous-seuil" style="--i:28"></span>
+      <span class="pastille sous-seuil" style="--i:29"></span>
+      <span class="pastille sous-seuil" style="--i:30"></span>
+    </div>
+    <div class="legende">
+      <span><i></i> 21 classables — cinq positions prouvées au moins</span>
+      <span><i class="vide"></i> 10 suivies, pas encore classables</span>
+    </div>
+    <p class="sous-bouton">Une pastille par personnalité suivie. Le corpus
+      grossit à mesure que les prises de position deviennent publiques, et ces
+      chiffres bougent avec lui — d'où la date.</p>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Ce que presid ne fait pas</h2>
+    <div class="grille">
+      <div class="carte">
+        <h3>Aucune donnée collectée</h3>
+        <p>Pas de compte, pas de serveur, pas de mesure d'audience, pas de
+          publicité, pas de traceur. Il n'y a pas une seule requête réseau dans
+          le code de l'application.</p>
+      </div>
+      <div class="carte">
+        <h3>Aucun portrait</h3>
+        <p>Les personnalités sont représentées par un monogramme. Une photo de
+          presse n'emporte pas le droit d'utiliser l'image de la personne, et
+          les licences disponibles favorisaient un bord plutôt qu'un autre.</p>
+      </div>
+      <div class="carte">
+        <h3>Silence pendant la réserve</h3>
+        <p>La veille et le jour de chaque tour, le partage de résultats est
+          suspendu et l'écran de sondages masqué, conformément au droit
+          électoral français.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere" id="contact">
+    <h2>Nous écrire</h2>
+    <p class="chapo">Une position mal attribuée, une source périmée, un
+      candidat qui s'est retiré : la correction d'une donnée fausse passe avant
+      tout le reste.</p>
+    <div class="contacts">
+      <div class="contact">
+        <div class="nom">Louis Coudière</div>
+        <p class="sous-bouton" style="margin:.15rem 0 .5rem">Édition, données, assistance</p>
+        <a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a>
+      </div>
+      <div class="contact">
+        <div class="nom">Victor Parcollet</div>
+        <p class="sous-bouton" style="margin:.15rem 0 .5rem">Contact</p>
+        <a href="mailto:victor.parcollet@presid.app">victor.parcollet@presid.app</a>
+      </div>
+    </div>
+  </section>
+
 </main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="assistance.html">Assistance</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="https://apps.apple.com/fr/app/id6800288453">App Store</a>
+    </div>
+    <p>© 2026 Louis Coudière. presid n'est affilié à aucun parti, aucun
+      candidat ni aucune institution publique, et n'est pas un service de
+      l'État.</p>
+  </div>
+</footer>
+
 </body>
 </html>

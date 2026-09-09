@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>presid — comparer avec un proche</title>
+<meta name="description" content="Vous avez reçu un code de comparaison presid.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<script>
+/* Masque les éléments avant la première peinture, pour que la rivière parte de
+   zéro. Filet : si anim.js n'a pas tourné, tout redevient visible au bout
+   d'1,5 s — une page qui ne s'anime pas vaut mieux qu'une page vide. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
+  }
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
+</head>
+<body>
+
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+  </div>
+</header>
+
+<main class="enveloppe etroit riviere" style="padding-top:2.5rem">
+  <h1 style="font-size:clamp(1.9rem,5vw,2.6rem)">On vous a envoyé un code.</h1>
+  <p class="chapo">Il contient les réponses de la personne qui vous l'a
+    transmis — rien d'autre : ni nom, ni identifiant, ni appareil.</p>
+
+  <div class="carte jaune" style="margin:1.75rem 0;text-align:center">
+    <div style="font-size:.8125rem;font-weight:700;letter-spacing:.12em;color:var(--sur-jaune)">SON CODE</div>
+    <div id="code" style="font-size:clamp(1.6rem,7vw,2.4rem);font-weight:800;letter-spacing:.14em;margin-top:.4rem;word-break:break-all">—</div>
+  </div>
+
+  <p>Si presid est installé sur ce téléphone, l'application s'ouvre d'elle-même
+    sur la comparaison. Sinon, installez-la, ouvrez l'onglet <strong>Duel</strong>
+    et collez le code ci-dessus.</p>
+
+  <div class="actions">
+    <a class="bouton" href="https://apps.apple.com/fr/app/id6800288453">Installer presid</a>
+    <a class="bouton fantome" href="index.html">Ce qu'est presid</a>
+  </div>
+  <p class="sous-bouton">La comparaison se calcule sur les deux téléphones.
+    Aucun code ne transite par un serveur de presid — ce site n'en reçoit
+    d'ailleurs aucune copie&nbsp;: ce qui suit le «&nbsp;?&nbsp;» dans une
+    adresse n'est jamais envoyé au-delà de votre navigateur.</p>
+</main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="index.html">Accueil</a>
+      <a href="assistance.html">Assistance</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+    </div>
+    <p>© 2026 Louis Coudière.</p>
+  </div>
+</footer>
+
+<script>
+/* Affiche le code présent dans l'adresse. Aucune requête, aucun stockage :
+   l'alphabet des codes exclut I, L, O et U (cf. src/lib/duo.ts), donc tout
+   caractère hors de cet alphabet est rejeté plutôt qu'affiché. */
+(function () {
+  var brut = new URLSearchParams(location.search).get('c') || '';
+  var propre = brut.toUpperCase().replace(/[^0-9ABCDEFGHJKMNPQRSTVWXYZ]/g, '').slice(0, 12);
+  document.getElementById('code').textContent = propre || 'aucun code dans le lien';
+})();
+</script>
+
+</body>
+</html>
