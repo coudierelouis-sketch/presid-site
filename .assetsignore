@@ -1,0 +1,15 @@
+# Ce qui ne doit JAMAIS être servi par presid.app.
+#
+# Constaté le 24/09/2026 : `assets.directory = "."` versait le dépôt entier,
+# et https://presid.app/.git/HEAD répondait 200. Le dépôt est public sur
+# GitHub, donc rien n'a fuité — mais servir un .git reste une porte ouverte
+# (branches locales, objets non poussés) et ça se corrige d'une ligne.
+.git
+.gitignore
+.assetsignore
+.wrangler
+node_modules
+wrangler.jsonc
+package.json
+package-lock.json
+README.md
