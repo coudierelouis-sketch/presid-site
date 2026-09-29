@@ -74,3 +74,113 @@ réponse partira de l'adresse personnelle et l'anonymat de l'adresse est perdu.
   sert à rien tant que l'app n'a pas la capacité *Associated Domains* et
   `associatedDomains: ["applinks:presid.app"]` — donc un build natif iOS. Côté
   Android, `assetlinks.json` attend le SHA-256 du certificat de signature Play.
+
+## Citoyen éclairé — la certification (version de travail, 28/09/2026)
+
+```
+citoyen.html        la page : parcours, 8 modules, examen, certificat
+citoyen-data.js     TOUT le contenu (cours, quiz, banque d'examen, sources)
+citoyen.js          le lecteur plein écran, les quiz, l'examen, le certificat
+citoyen.css         styles propres à la page (s'ajoute à style.css)
+```
+
+**Pas encore publique** : `noindex`, absente du sitemap et de la nav des
+autres pages. Le bouton LinkedIn est grisé (`CERTIFICATION_OUVERTE = false`
+dans `citoyen.js`) tant qu'il n'y a ni relecture du comité, ni page de
+vérification, ni page entreprise LinkedIn.
+
+La progression et le nom restent dans le localStorage du navigateur : aucune
+requête, comme le reste du site.
+
+### À revérifier avant ouverture
+
+Les articles de la Constitution cités ont été relus sur le texte intégral du
+Conseil constitutionnel le 28/09/2026. Tout le reste est à confirmer sur
+source, puis à faire relire par le comité :
+
+- Constitution révisée « plus de vingt fois » (25 au dernier décompte connu) ;
+- dates : suffrage direct 1962, quinquennat 2000, deux mandats 2008,
+  QPC 2010, vote blanc 2014, procuration hors commune 2022 ;
+- cohabitations 1986-88, 1993-95, 1997-2002 ; censures 1962 et déc. 2024
+  (vérifier qu'aucune autre n'a eu lieu depuis) ;
+- ~35 000 communes, 101 départements, 18 régions ;
+- Parlement européen 720 sièges, 81 pour la France (2024-2029) ;
+  majorité qualifiée 55 % / 65 % ;
+- CMP à 7 + 7 ; e-pétitions Sénat 100 000 en 6 mois (vérifié sur
+  petitions.senat.fr) ; RIP « près de 5 millions » ;
+- marge d'erreur ≈ 3 points pour 1 000 sondés ; interdiction de publier un
+  sondage la veille et le jour du scrutin ;
+- répartition des compétences des collectivités (déchets à
+  l'intercommunalité, TER à la région, RSA au département) ;
+- ajoutés le 28/09 avec les nouvelles questions : parrainages venant d'au
+  moins 30 départements ; aucune élection gagnée au 1er tour sous la Ve ;
+  langue française à l'article 2 depuis 1992 ; Ville de Paris
+  commune + département depuis 2019 ; Conseil de l'Europe à 46 États ;
+  UE à 28 avant 2020.
+
+### Ce qui a changé après les tests du 28/09 (deux profils : 22 ans, 46 ans)
+
+- **Note sur 20** : examen 75 %, quiz de module 25 %, et seul le **premier
+  essai** d'un module compte. Chaque mention exige aussi un score à
+  l'examen (Assez bien 30/40, Bien 33, Très bien 36) — sans ça, un examen
+  tout juste réussi décrochait « Très bien ».
+- **5 à 6 questions par module** (41 au total), QCM à **4 choix**, jamais
+  plus de deux écrans de cours d'affilée.
+- **Reprise** au dernier écran après fermeture, et bouton **Précédent**
+  (modules seulement ; à l'examen, une réponse donnée est donnée). Une
+  réponse réaffichée n'est jamais recomptée.
+- **« Lire la suite ↓ »** remplace « Continuer » tant qu'un écran trop haut
+  n'a pas été lu jusqu'en bas.
+- **Partage** : story 1080×1920 générée dans le navigateur (partage natif
+  sur téléphone, téléchargement sinon) et « Défier un ami ». Lien vers
+  l'app presid en fin de module (un sur deux) et de résultat.
+- **Crédibilité** : section « Qui a écrit ces modules » (le comité s'affiche
+  dès que `equipe.comite` est rempli dans `citoyen-data.js`, et sur les
+  certificats), lexique de 18 termes cliquables dans les modules,
+  certificat téléchargeable en PNG A4 paysage en plus de l'impression/PDF.
+- Clé de stockage passée à `presid.citoyen.v2` (les totaux ont changé).
+
+## Le serveur de la certification (29/09/2026)
+
+Décision de Louis : la certification est **officielle et vérifiable**, comme
+un certificat Coursera sur LinkedIn (identifiant + « Afficher le diplôme »).
+Un identifiant ne prouve rien s'il se fabrique dans le navigateur : l'examen
+est donc tiré, corrigé et signé par un **Worker Cloudflare**.
+
+```
+worker/index.js     les routes /api/* (tout le reste reste statique)
+worker/banque.js    la banque d'examen AVEC les réponses — jamais servie
+verifier.html/.js   presid.app/verifier#<certificat> : la page « Afficher le diplôme »
+```
+
+| route | rôle |
+| --- | --- |
+| `POST /api/examen/debut` | tire 5 questions par module, mélange les choix, ouvre une session KV (2 h) |
+| `POST /api/examen/repondre` | corrige une question ; la première réponse est définitive |
+| `POST /api/examen/terminer` | compte, calcule la note, remet un jeton signé si ≥ 30/40 |
+| `POST /api/certificat` | jeton + nom → certificat signé (3 par examen réussi au plus) |
+| `POST /api/verifier` | vérifie la signature d'un certificat |
+
+- **Rien de nominatif n'est stocké.** KV ne garde que la session anonyme
+  (2 h) et un compteur sans nom (30 j). Le nom vit dans le lien, après le
+  `#`, que les navigateurs n'envoient jamais : il n'apparaît dans aucun
+  journal. La politique de confidentialité a été réécrite en conséquence.
+- **Secret** : `CERT_CLE`, posé par `wrangler secret put CERT_CLE`. Le
+  changer invalide TOUS les certificats déjà délivrés — ne jamais le faire.
+- **KV** : namespace `EXAMENS` (id dans `wrangler.jsonc`).
+- **Local** : `.dev.vars` (clé de test, ignorée par git ET par les assets),
+  et `wrangler dev --persist-to <hors du dossier>` : sinon chaque écriture
+  KV fait recharger le serveur en boucle.
+- **LinkedIn** : l'émetteur est la page existante « Presid »,
+  https://www.linkedin.com/company/presidapp (id `143659983`), dans
+  `LINKEDIN_ORG` (`citoyen.js` et `verifier.js`). Un doublon `presid-app`
+  (id 146641772) créé par erreur le 29/09/2026 a été désactivé le jour même.
+- **Un clic vers LinkedIn** : le lien `linkedin.com/profile/add` ouvre le
+  formulaire « Licences et certifications » déjà rempli (nom, émetteur
+  Presid avec logo, date, identifiant, URL) ; le titulaire n'a qu'à cliquer
+  « Enregistrer ». Il est proposé en fin d'examen, sur la page
+  /citoyen au retour, et sur la page de vérification. LinkedIn n'offre
+  aucune API pour l'écrire sans ce dernier clic.
+- Les quiz de module (25 % de la note) restent dans le navigateur, donc
+  déclaratifs ; l'effet d'une triche est borné, car chaque mention exige
+  aussi un score d'examen que seul le serveur connaît.

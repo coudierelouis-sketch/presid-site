@@ -1,11 +1,23 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "presid-site",
+  // Le Worker ne sert QUE la certification (/api/*) ; tout le reste part
+  // directement des fichiers statiques, sans passer par lui.
+  "main": "worker/index.js",
   "compatibility_date": "2026-09-08",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
-  }
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  // Sessions d'examen anonymes (2 h) et compteurs de certificats (30 j).
+  // Aucun nom n'y est jamais écrit.
+  "kv_namespaces": [
+    { "binding": "EXAMENS", "id": "e9ad454433aa4d80a2abe40c8e80744d" }
+  ]
+  // Secret : CERT_CLE (clé de signature des certificats), posé par
+  // `wrangler secret put CERT_CLE`. Ne jamais le committer.
 }

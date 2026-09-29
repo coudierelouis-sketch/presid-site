@@ -1,0 +1,663 @@
+/* presid.app/citoyen — la certification « Citoyen éclairé ».
+   S'ajoute à style.css sans rien y changer : mêmes tokens, même riso (aplats
+   francs, zéro ombre, zéro dégradé), mêmes courbes. Deux règles de mouvement
+   héritées de l'app et non négociables : décéléré, et JAMAIS de rebond. */
+
+/* ---------- teintes des modules ----------
+   Six reprennent les cartes-sujets de l'accueil ; ambre et lilas complètent
+   le jeu de huit. Le fond est clair, l'encre foncée : contraste AA partout. */
+.t-rouge { --fond:#FFD9D0; --ton:#9E2703; }
+.t-bleu  { --fond:#C7D2FF; --ton:#1A2699; }
+.t-jaune { --fond:#FFE066; --ton:#7A5200; }
+.t-sable { --fond:#EDE7D6; --ton:#5C5340; }
+.t-vert  { --fond:#C9F27A; --ton:#2E5C14; }
+.t-ciel  { --fond:#A8E8FF; --ton:#0F4E69; }
+.t-ambre { --fond:#FFD9A8; --ton:#8A4B00; }
+.t-lilas { --fond:#E2D6FF; --ton:#4A2C8F; }
+.t-encre { --fond:#1B1B2E; --ton:#FFFAF0; }
+
+:root{ --brique:#C0361A; --courbe:cubic-bezier(.215,.61,.355,1); --sortie:cubic-bezier(.55,0,.85,.35); }
+
+/* ============================================================
+   L'ACCUEIL
+   ============================================================ */
+
+.etiquette{
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.8125rem; font-weight:700; letter-spacing:.02em;
+  background:var(--surface); border:1px solid var(--bord);
+  padding:.35rem .85rem; border-radius:var(--r-pilule); margin:0 0 1.4rem;
+}
+.etiquette .puce{ width:.5rem; height:.5rem; border-radius:50%; background:var(--rouge); animation:battement 2.8s ease-in-out infinite; }
+.etiquette.claire{ background:rgba(255,250,240,.12); border-color:rgba(255,250,240,.2); color:var(--creme); margin-bottom:1rem; }
+
+.cit-hero{
+  position:relative; isolation:isolate;
+  display:grid; grid-template-columns:minmax(0,1fr) 20rem; column-gap:3.5rem;
+  align-items:center; padding-top:3.5rem; padding-bottom:1.5rem;
+}
+.cit-hero > .confettis{ grid-area:1 / 1 / -1 / -1; }
+.cit-hero h1{ font-size:clamp(2.6rem,7.4vw,4.6rem); }
+.meta{ list-style:none; padding:0; margin:2rem 0 0; display:flex; flex-wrap:wrap; gap:.5rem; }
+.meta li{ font-size:.9375rem; color:var(--encre-2); background:var(--creux); border-radius:var(--r-pilule); padding:.4rem .9rem; }
+.meta strong{ color:var(--encre); font-weight:800; }
+
+/* Le badge du héros : un sceau qui tourne très lentement, et la carte telle
+   qu'elle apparaîtra sur un profil. Il flotte comme les captures de l'accueil. */
+.cit-hero-badge{ display:flex; flex-direction:column; align-items:center; gap:1.1rem; animation:flotte 9s ease-in-out infinite; }
+.badge{ position:relative; width:13.5rem; height:13.5rem; }
+.sceau{ width:100%; height:100%; animation:tourne 40s linear infinite; }
+.sceau-fond{ fill:var(--bleu); }
+.sceau text{ fill:var(--creme); font-size:13px; font-weight:800; }
+.sceau-coeur{
+  position:absolute; inset:24%; border-radius:50%;
+  background:var(--jaune); color:var(--encre);
+  display:flex; align-items:center; justify-content:center;
+  font-size:3.6rem; font-weight:800; letter-spacing:-.05em; line-height:1;
+}
+.sceau-coeur span{ color:var(--rouge); }
+@keyframes tourne{ to{ transform:rotate(360deg); } }
+.badge-carte{
+  background:var(--surface); border:1px solid var(--bord); border-radius:18px;
+  padding:.85rem 1.2rem; text-align:center; display:flex; flex-direction:column; gap:.1rem;
+  min-width:15rem;
+}
+.badge-sur{ font-size:.75rem; font-weight:700; color:var(--encre-2); text-transform:uppercase; letter-spacing:.08em; }
+.badge-carte strong{ font-size:1.2rem; letter-spacing:-.02em; }
+.badge-emetteur{ font-size:.8125rem; color:var(--encre-2); }
+
+@media (max-width:60rem){
+  .cit-hero{ grid-template-columns:minmax(0,1fr); }
+  .cit-hero-badge{ margin:3rem auto .5rem; }
+}
+
+/* ---------- progression ---------- */
+.titre-rangee{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.titre-rangee h2{ margin-bottom:.5rem; }
+.progression-texte{ margin:0; color:var(--encre-2); font-weight:600; font-size:.9375rem; }
+.progression{ display:grid; grid-template-columns:repeat(8,1fr); gap:.35rem; margin:0 0 1.5rem; }
+.progression i{ height:.45rem; border-radius:var(--r-pilule); background:var(--creux); position:relative; overflow:hidden; }
+.progression i::after{
+  content:''; position:absolute; inset:0; background:var(--vert);
+  transform:scaleX(0); transform-origin:left; transition:transform .6s var(--courbe);
+}
+.progression i.fait::after{ transform:scaleX(1); }
+
+/* ---------- les huit modules ---------- */
+.modules{ display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(14.5rem,1fr)); }
+.module{
+  position:relative; overflow:hidden; isolation:isolate;
+  text-align:left; font:inherit; color:var(--encre); cursor:pointer;
+  background:var(--fond); border:0; border-radius:var(--r);
+  padding:1.3rem 1.35rem 1.2rem; min-height:12.5rem;
+  display:flex; flex-direction:column; gap:.4rem;
+  transition:transform .2s var(--courbe);
+}
+.module::after{
+  content:''; position:absolute; z-index:-1; right:-2.5rem; top:-2.5rem;
+  width:8rem; height:8rem; border-radius:50%; background:rgba(27,27,46,.06);
+  transition:transform .5s var(--courbe);
+}
+.module:hover{ transform:translateY(-4px); }
+.module:hover::after{ transform:scale(1.35); }
+.module:focus-visible{ outline:3px solid var(--bleu); outline-offset:3px; }
+.module-num{ font-size:2.4rem; font-weight:800; letter-spacing:-.05em; line-height:1; color:var(--ton); }
+.module h3{ margin:.35rem 0 0; font-size:1.125rem; line-height:1.2; }
+.module p{ margin:0; font-size:.9375rem; color:var(--encre-2); line-height:1.4; }
+.module-pied{ margin-top:auto; padding-top:.8rem; display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.module-duree{ font-size:.8125rem; font-weight:600; color:var(--ton); }
+.statut{
+  font-size:.75rem; font-weight:700; padding:.25rem .65rem; border-radius:var(--r-pilule);
+  background:rgba(255,255,255,.65); color:var(--ton);
+}
+.statut.fait{ background:var(--ton); color:var(--fond); }
+
+html.anime .riviere:not(.coule) .module{ opacity:0; }
+html.anime .riviere.coule .module{
+  animation:depli 280ms var(--courbe) backwards;
+  animation-delay:calc(200ms + var(--i,0) * 70ms);
+  transform-origin:top;
+}
+
+/* ---------- la carte de l'examen ---------- */
+.examen-carte{
+  margin-top:1rem; background:var(--encre); color:var(--creme);
+  border-radius:var(--r); padding:1.6rem 1.75rem;
+  display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;
+  position:relative; overflow:hidden; isolation:isolate;
+}
+.examen-carte::before, .examen-carte::after{
+  content:''; position:absolute; z-index:-1; border-radius:50%;
+}
+.examen-carte::before{ width:11rem; height:11rem; right:-3rem; bottom:-5rem; background:var(--bleu); }
+.examen-carte::after{ width:4rem; height:4rem; right:7rem; top:-1.5rem; background:var(--rouge); }
+.examen-carte h3{ font-size:1.375rem; margin:0 0 .4rem; }
+.examen-carte p{ margin:0; color:rgba(255,250,240,.72); max-width:34rem; font-size:.9688rem; }
+.bouton.clair{ background:var(--jaune); border-color:var(--jaune); color:var(--encre); }
+.bouton.clair:hover{ background:var(--creme); border-color:var(--creme); color:var(--encre); }
+
+/* ============================================================
+   LE TEXTE ANIMÉ
+   Chaque mot monte de 0,35 em, 14 ms après le précédent. Les mots-clés
+   reçoivent ensuite le surlignage jaune, au pinceau, de gauche à droite.
+   ============================================================ */
+.m{ display:inline-block; }
+.joue .m{
+  animation:mot 420ms var(--courbe) backwards;
+  animation-delay:calc(var(--base,0ms) + var(--i,0) * 14ms);
+}
+@keyframes mot{ from{ opacity:0; transform:translateY(.35em); } }
+
+.cle{
+  font-weight:700; color:var(--encre);
+  background-image:linear-gradient(var(--jaune),var(--jaune));
+  background-repeat:no-repeat; background-position:left 88%;
+  background-size:100% 38%;
+  padding:0 .06em; box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+.joue .cle{ animation:pinceau 520ms var(--courbe) backwards; animation-delay:calc(var(--base,0ms) + var(--d,0) * 14ms + 260ms); }
+@keyframes pinceau{ from{ background-size:0% 38%; } }
+
+/* Le h1 du héros : même montée, mot par mot, au chargement. */
+.cit-hero .surligne{ background-size:100% 100%; }
+.cit-hero .joue .surligne,
+.cit-hero h1.joue .surligne{ animation:surligne 620ms var(--courbe) backwards; animation-delay:calc(var(--d,0) * 14ms + 380ms); }
+@keyframes surligne{ from{ background-size:0% 100%; } }
+
+/* ============================================================
+   LE LECTEUR
+   Plein écran, crème, une colonne. Un écran sort vers le haut (courbe
+   accélérée : il s'en va), le suivant se déplie depuis le haut (décélérée :
+   il se pose). 70 ms par rang, comme la rivière.
+   ============================================================ */
+body.lit{ overflow:hidden; }
+.lecteur{
+  position:fixed; inset:0; z-index:50; background:var(--creme);
+  display:grid; grid-template-rows:auto auto 1fr auto;
+  animation:lecteur-entre 320ms var(--courbe);
+}
+.lecteur[hidden]{ display:none; }
+.lecteur.part{ animation:lecteur-sort 220ms var(--sortie) forwards; }
+@keyframes lecteur-entre{ from{ opacity:0; transform:translateY(24px); } }
+@keyframes lecteur-sort{ to{ opacity:0; transform:translateY(24px); } }
+
+.lecteur-haut{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1rem;
+  padding:1rem max(1rem, calc((100% - 44rem) / 2)) .75rem;
+}
+.fermer{
+  width:2.5rem; height:2.5rem; border-radius:50%; border:1px solid var(--bord);
+  background:var(--surface); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  transition:background-color .2s, transform .2s var(--courbe);
+}
+.fermer:hover{ background:var(--jaune); border-color:var(--jaune); transform:rotate(90deg); }
+.fermer svg{ width:1.1rem; height:1.1rem; fill:none; stroke:var(--encre); stroke-width:2.4; stroke-linecap:round; }
+.lecteur-titre{ font-weight:700; font-size:.9375rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lecteur-titre span{ color:var(--encre-2); font-weight:600; }
+.lecteur-compte{ font-size:.875rem; font-weight:700; color:var(--encre-2); font-variant-numeric:tabular-nums; }
+
+.lecteur-barre{ height:.35rem; margin:0 max(1rem, calc((100% - 44rem) / 2)); background:var(--creux); border-radius:var(--r-pilule); overflow:hidden; }
+.lecteur-barre i{ display:block; height:100%; width:100%; background:var(--ton,var(--bleu)); border-radius:inherit; transform-origin:left; transform:scaleX(0); transition:transform .5s var(--courbe); }
+
+.scene{ overflow-y:auto; overflow-x:hidden; padding:2.5rem 1.25rem 2rem; -webkit-overflow-scrolling:touch; }
+.ecran{ max-width:40rem; margin:0 auto; min-height:100%; display:flex; flex-direction:column; justify-content:center; }
+.ecran > *{ animation:depli 300ms var(--courbe) backwards; animation-delay:calc(var(--r,0) * 70ms); transform-origin:top; }
+.ecran.sort{ animation:ecran-sort 200ms var(--sortie) forwards; }
+.ecran.sort > *{ animation:none; }
+@keyframes ecran-sort{ to{ opacity:0; transform:translateY(-14px); } }
+
+.lecteur-bas{
+  padding:.9rem max(1.25rem, calc((100% - 40rem) / 2)) calc(1.1rem + env(safe-area-inset-bottom));
+  border-top:1px solid var(--bord); background:var(--creme);
+  display:flex; justify-content:flex-end; align-items:center; gap:1rem;
+}
+.lecteur-bas .aide{ margin-right:auto; font-size:.875rem; color:var(--encre-2); }
+.lecteur-bas .bouton{ min-width:10rem; justify-content:center; cursor:pointer; font-family:inherit; }
+.lecteur-bas .bouton:disabled{ background:var(--creux); border-color:var(--creux); color:var(--encre-3); cursor:not-allowed; transform:none; }
+.lecteur-bas.cache{ visibility:hidden; }
+
+/* ---------- les briques d'un écran ---------- */
+.sur{
+  align-self:flex-start; font-size:.8125rem; font-weight:700; letter-spacing:.02em;
+  color:var(--ton); background:var(--fond); padding:.3rem .8rem; border-radius:var(--r-pilule); margin:0 0 1rem;
+}
+.ecran h2{ font-size:clamp(1.75rem,5vw,2.5rem); line-height:1.08; letter-spacing:-.035em; margin:0 0 1.1rem; }
+.texte-cours{ font-size:clamp(1.0625rem,2.4vw,1.25rem); line-height:1.55; margin:0; color:var(--encre); }
+.citation{ font-size:1.1rem; font-style:italic; color:var(--encre-2); margin:0 0 1.25rem; }
+
+.faits{ display:grid; gap:.75rem; grid-template-columns:repeat(auto-fit,minmax(9rem,1fr)); margin-top:1.75rem; }
+.fait{ background:var(--fond); border-radius:var(--r); padding:1.1rem 1.2rem; }
+.fait .v{ font-size:clamp(2rem,6vw,2.75rem); font-weight:800; letter-spacing:-.045em; line-height:1; color:var(--ton); font-variant-numeric:tabular-nums; }
+.fait .l{ font-size:.9375rem; color:var(--encre-2); margin-top:.35rem; line-height:1.3; }
+
+.mots-liste{ display:grid; gap:.6rem; margin-top:.5rem; }
+.mot-item{
+  background:var(--surface); border:1px solid var(--bord); border-left:5px solid var(--ton);
+  border-radius:0 16px 16px 0; padding:.85rem 1.1rem;
+  animation:depli 300ms var(--courbe) backwards; animation-delay:calc(300ms + var(--i,0) * 90ms); transform-origin:top;
+}
+.mot-item strong{ display:block; font-size:1.0625rem; letter-spacing:-.01em; }
+.mot-item span{ font-size:.9688rem; color:var(--encre-2); line-height:1.45; }
+
+.duo{ display:grid; grid-template-columns:1fr auto 1fr; align-items:stretch; gap:.75rem; margin-top:.5rem; }
+.duo-carte{ background:var(--fond); border-radius:var(--r); padding:1.3rem 1.3rem; }
+.duo-carte:last-child{ background:var(--surface); border:1px solid var(--bord); }
+.duo-carte strong{ display:block; font-size:1.2rem; letter-spacing:-.02em; margin-bottom:.5rem; color:var(--ton); }
+.duo-carte span{ font-size:1rem; line-height:1.5; color:var(--encre); }
+.duo-ou{
+  align-self:center; width:2.6rem; height:2.6rem; border-radius:50%;
+  background:var(--encre); color:var(--creme); font-weight:800; font-size:.875rem;
+  display:flex; align-items:center; justify-content:center;
+}
+@media (max-width:40rem){
+  .duo{ grid-template-columns:1fr; }
+  .duo-ou{ justify-self:center; margin:-.25rem 0; }
+}
+
+/* ---------- intro et fin de module ---------- */
+.intro-num{
+  font-size:clamp(6rem,22vw,10rem); font-weight:800; letter-spacing:-.07em; line-height:.8;
+  color:var(--ton); margin:0 0 1.5rem;
+  display:flex; align-items:flex-end; gap:.75rem;
+}
+.intro-num small{ font-size:1rem; letter-spacing:0; font-weight:700; color:var(--encre-3); margin-bottom:.6rem; }
+.intro-meta{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.5rem; }
+.intro-meta span{ font-size:.875rem; font-weight:600; background:var(--fond); color:var(--ton); padding:.35rem .85rem; border-radius:var(--r-pilule); }
+
+/* ---------- vrai / faux : une carte qu'on jette ---------- */
+.q-titre{ font-size:.8125rem; font-weight:700; color:var(--encre-2); text-transform:uppercase; letter-spacing:.08em; margin:0 0 .9rem; }
+.vf-zone{ position:relative; height:15rem; margin:0 0 1.25rem; }
+.vf-carte{
+  position:absolute; inset:0; border-radius:26px; background:var(--fond);
+  padding:1.6rem 1.6rem; display:flex; align-items:flex-end; overflow:hidden;
+  touch-action:pan-y; cursor:grab; user-select:none; -webkit-user-select:none;
+  transition:transform .32s var(--courbe), background-color .25s;
+}
+.vf-carte::after{ content:''; position:absolute; right:-3rem; top:-3rem; width:9rem; height:9rem; border-radius:50%; background:rgba(27,27,46,.06); }
+.vf-carte p{ margin:0; font-size:clamp(1.3rem,3.6vw,1.6rem); line-height:1.22; font-weight:800; letter-spacing:-.025em; }
+.vf-carte.tire{ transition:none; cursor:grabbing; }
+.vf-carte.sort{ transition:transform .42s var(--sortie), opacity .42s ease-in; }
+.vf-carte:focus-visible{ outline:3px solid var(--bleu); outline-offset:6px; }
+/* Le tampon apparaît pendant qu'on tire : il dit ce que le geste va répondre. */
+.tampon{
+  position:absolute; top:1.3rem; padding:.3rem .8rem; border-radius:10px;
+  font-weight:800; font-size:1.05rem; letter-spacing:.06em; color:#fff; opacity:0;
+  transition:opacity .12s;
+}
+.tampon.vrai{ left:1.3rem; background:var(--vert); transform:rotate(-8deg); }
+.tampon.faux{ right:1.3rem; background:var(--brique); transform:rotate(8deg); }
+.vf-dos{
+  position:absolute; inset:.9rem .9rem -.6rem; border-radius:26px; background:var(--creux); z-index:-1;
+}
+.vf-boutons{ display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.vf-boutons button{
+  font:inherit; font-weight:800; font-size:1.0625rem; cursor:pointer;
+  padding:.95rem 1rem; border-radius:var(--r-pilule); border:2px solid transparent; color:#fff;
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  transition:transform .18s var(--courbe), opacity .2s;
+}
+.vf-boutons svg{ width:1.2rem; height:1.2rem; fill:none; stroke:#fff; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
+.vf-boutons .faux{ background:var(--brique); }
+.vf-boutons .vrai{ background:var(--vert); }
+.vf-boutons button:hover, .vf-boutons button.vise{ transform:translateY(-2px) scale(1.03); }
+.vf-boutons button:focus-visible{ outline:3px solid var(--bleu); outline-offset:3px; }
+.vf-boutons button:disabled{ opacity:.35; cursor:default; transform:none; }
+.vf-aide{ text-align:center; font-size:.875rem; color:var(--encre-2); margin:.8rem 0 0; }
+
+/* ---------- QCM ---------- */
+.q-enonce{ font-size:clamp(1.35rem,3.8vw,1.75rem); line-height:1.2; letter-spacing:-.025em; font-weight:800; margin:0 0 1.5rem; }
+.choix{ display:grid; gap:.65rem; }
+.choix button{
+  font:inherit; text-align:left; cursor:pointer; color:var(--encre);
+  background:var(--surface); border:2px solid var(--bord); border-radius:18px;
+  padding:1rem 1.15rem; font-size:1.0625rem; font-weight:600; line-height:1.35;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.9rem;
+  transition:transform .18s var(--courbe), background-color .2s, border-color .2s, color .2s, opacity .3s;
+  animation:depli 300ms var(--courbe) backwards; animation-delay:calc(220ms + var(--i,0) * 70ms); transform-origin:top;
+}
+.choix button:hover:not(:disabled){ transform:translateX(4px); border-color:var(--ton,var(--bleu)); }
+.choix button:focus-visible{ outline:3px solid var(--bleu); outline-offset:2px; }
+.choix .lettre{
+  width:1.9rem; height:1.9rem; border-radius:50%; background:var(--creux);
+  display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:.875rem;
+  transition:background-color .2s, color .2s;
+}
+.choix .marque-rep{ width:1.4rem; height:1.4rem; opacity:0; transform:scale(.4); transition:opacity .25s, transform .3s var(--courbe); }
+.choix .marque-rep svg{ width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+.choix button:disabled{ cursor:default; }
+.choix button.juste{ background:#D6F5E3; border-color:var(--vert); color:#064A2E; }
+.choix button.juste .lettre{ background:var(--vert); color:#fff; }
+.choix button.faux{ background:#FFE1D9; border-color:var(--brique); color:#7A1E0A; }
+.choix button.faux .lettre{ background:var(--brique); color:#fff; }
+.choix button.juste .marque-rep, .choix button.faux .marque-rep{ opacity:1; transform:none; }
+.choix button.eteint{ opacity:.45; }
+
+/* ---------- remettre dans l'ordre ---------- */
+.emplacements{ list-style:none; padding:0; margin:0 0 1.25rem; display:grid; gap:.45rem; counter-reset:etape; }
+.emplacements li{
+  counter-increment:etape; min-height:3.1rem; border-radius:14px;
+  border:2px dashed var(--bord-fort); display:flex; align-items:center; gap:.8rem; padding:.55rem .9rem;
+  color:var(--encre-3); font-weight:600; transition:background-color .25s, border-color .25s, color .25s;
+}
+.emplacements li::before{
+  content:counter(etape); width:1.7rem; height:1.7rem; flex:none; border-radius:50%;
+  background:var(--creux); display:inline-flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:.8125rem; color:var(--encre-2);
+}
+.emplacements li.plein{ border-style:solid; border-color:var(--fond); background:var(--fond); color:var(--encre); }
+.emplacements li.plein::before{ background:var(--ton); color:var(--fond); }
+.emplacements li.plein span{ animation:depli 280ms var(--courbe); }
+.reserve{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.reserve button{
+  font:inherit; font-weight:600; font-size:.9688rem; cursor:pointer;
+  background:var(--surface); border:2px solid var(--bord); border-radius:var(--r-pilule);
+  padding:.6rem 1rem; color:var(--encre);
+  transition:transform .18s var(--courbe), opacity .25s, background-color .2s, border-color .2s;
+  animation:depli 280ms var(--courbe) backwards; animation-delay:calc(260ms + var(--i,0) * 60ms);
+}
+.reserve button:hover{ transform:translateY(-2px); border-color:var(--ton); }
+.reserve button.pris{ opacity:0; pointer-events:none; transform:scale(.8); }
+.reserve button.rate{ background:#FFE1D9; border-color:var(--brique); }
+.reserve button:focus-visible{ outline:3px solid var(--bleu); outline-offset:2px; }
+
+/* ---------- l'idée reçue ---------- */
+.piege{ position:relative; }
+.piege-carte{
+  background:var(--encre); color:var(--creme); border-radius:26px; padding:2rem 1.75rem 1.75rem;
+  position:relative; overflow:hidden; isolation:isolate;
+}
+.piege-carte::after{ content:''; position:absolute; z-index:-1; width:10rem; height:10rem; border-radius:50%; right:-3rem; bottom:-4rem; background:var(--rouge); }
+.piege-sur{ font-size:.8125rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,250,240,.6); margin:0 0 .9rem; }
+.piege-mythe{ font-size:clamp(1.5rem,4.4vw,2.1rem); line-height:1.15; letter-spacing:-.03em; font-weight:800; margin:0; }
+.piege-mythe::before{ content:'« '; color:var(--jaune); }
+.piege-mythe::after{ content:' »'; color:var(--jaune); }
+.piege-tampon{
+  position:absolute; right:1.4rem; top:1.4rem; background:var(--brique); color:#fff;
+  font-weight:800; letter-spacing:.08em; padding:.3rem .8rem; border-radius:10px; transform:rotate(8deg);
+  opacity:0;
+}
+.piege.revele .piege-tampon{ animation:tampon 380ms var(--courbe) forwards; }
+@keyframes tampon{ from{ opacity:0; transform:rotate(8deg) scale(1.8); } to{ opacity:1; transform:rotate(8deg) scale(1); } }
+.piege-verite{ margin-top:1rem; background:var(--surface); border:1px solid var(--bord); border-radius:22px; padding:1.3rem 1.4rem; }
+.piege-verite[hidden]{ display:none; }
+.piege-verite{ animation:depli 320ms var(--courbe); transform-origin:top; }
+.piege-verite p{ margin:0; font-size:1.0938rem; line-height:1.55; }
+.demeler{ margin-top:1rem; align-self:flex-start; cursor:pointer; font-family:inherit; }
+
+/* ---------- le retour après une réponse ---------- */
+.retour{
+  margin-top:1.25rem; border-radius:20px; padding:1.1rem 1.25rem;
+  display:grid; grid-template-columns:auto 1fr; gap:.9rem; align-items:start;
+  animation:depli 320ms var(--courbe); transform-origin:top;
+}
+.retour.bon{ background:#D6F5E3; color:#064A2E; }
+.retour.rate{ background:#FFE1D9; color:#7A1E0A; }
+.retour-icone{ width:2.2rem; height:2.2rem; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.retour.bon .retour-icone{ background:var(--vert); }
+.retour.rate .retour-icone{ background:var(--brique); }
+.retour-icone svg{ width:1.15rem; height:1.15rem; fill:none; stroke:#fff; stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+.retour strong{ display:block; font-size:1.125rem; letter-spacing:-.01em; margin-bottom:.15rem; }
+.retour p{ margin:0; font-size:.9844rem; line-height:1.5; color:inherit; }
+
+/* ---------- fin de module et résultat d'examen ---------- */
+.fin{ text-align:center; align-items:center; position:relative; }
+.fin .sur{ align-self:center; }
+.fin-score{ font-size:clamp(4.5rem,18vw,7.5rem); font-weight:800; letter-spacing:-.06em; line-height:.9; margin:.5rem 0 .25rem; font-variant-numeric:tabular-nums; }
+.fin-score small{ font-size:.4em; color:var(--encre-3); letter-spacing:-.02em; }
+.fin p{ color:var(--encre-2); max-width:30rem; margin-left:auto; margin-right:auto; }
+.fin-actions{ display:flex; gap:.75rem; flex-wrap:wrap; justify-content:center; margin-top:1rem; }
+.fin-actions .bouton{ cursor:pointer; font-family:inherit; }
+.sources{ margin-top:1.75rem; text-align:left; width:100%; background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:1rem 1.2rem; }
+.sources strong{ font-size:.8125rem; text-transform:uppercase; letter-spacing:.08em; color:var(--encre-2); }
+.sources ul{ margin:.4rem 0 0; padding-left:1.1rem; }
+.sources li{ font-size:.9375rem; margin:.2rem 0; }
+
+.bilan{ width:100%; display:grid; gap:.55rem; margin:1.5rem 0 .5rem; text-align:left; }
+.bilan-ligne{ display:grid; grid-template-columns:minmax(0,11rem) 1fr auto; align-items:center; gap:.8rem; font-size:.9375rem; }
+.bilan-ligne span:first-child{ font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bilan-piste{ height:.6rem; border-radius:var(--r-pilule); background:var(--creux); overflow:hidden; }
+.bilan-piste i{ display:block; height:100%; background:var(--ton); border-radius:inherit; transform-origin:left; transform:scaleX(0); transition:transform .8s var(--courbe); }
+.bilan-ligne b{ font-variant-numeric:tabular-nums; }
+
+/* Les confettis de réussite : des aplats ronds qui s'écartent du centre et
+   s'effacent. Pas de gravité, pas de rebond — une riso qui éclate. */
+.eclats{ position:absolute; left:50%; top:30%; width:0; height:0; pointer-events:none; }
+.eclats i{
+  position:absolute; left:0; top:0; border-radius:50%; mix-blend-mode:multiply;
+  animation:eclat 1.3s var(--courbe) forwards; animation-delay:var(--retard,0ms);
+}
+@keyframes eclat{
+  from{ opacity:1; transform:translate(-50%,-50%) scale(.2); }
+  70%{ opacity:1; }
+  to{ opacity:0; transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1); }
+}
+
+/* ---------- le certificat ---------- */
+.certificat{
+  width:100%; margin:1.5rem 0 1rem; text-align:left;
+  background:var(--surface); border:1px solid var(--bord); border-radius:24px;
+  padding:1.6rem 1.6rem 1.4rem; position:relative; overflow:hidden; isolation:isolate;
+}
+.certificat::before{ content:''; position:absolute; z-index:-1; width:12rem; height:12rem; border-radius:50%; right:-4rem; top:-4rem; background:var(--jaune); }
+.certificat::after{ content:''; position:absolute; z-index:-1; width:4.5rem; height:4.5rem; border-radius:50%; right:1.5rem; bottom:-1.75rem; background:var(--ciel); mix-blend-mode:multiply; }
+.certificat-haut{ display:flex; align-items:center; gap:.9rem; margin-bottom:1.4rem; }
+.mini-sceau{ width:3.2rem; height:3.2rem; border-radius:50%; background:var(--bleu); display:flex; align-items:center; justify-content:center; flex:none; }
+.mini-sceau span{ width:2.1rem; height:2.1rem; border-radius:50%; background:var(--jaune); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+.mini-sceau b{ color:var(--rouge); }
+.certificat-haut div{ font-size:.8125rem; font-weight:700; color:var(--encre-3); text-transform:uppercase; letter-spacing:.08em; line-height:1.3; }
+.certificat-haut div strong{ display:block; color:var(--encre); text-transform:none; letter-spacing:-.02em; font-size:1.25rem; }
+/* .fin centre et grise ses paragraphes : le certificat, lui, reste aligné à gauche et à l'encre. */
+.fin .certificat p{ max-width:none; margin-left:0; margin-right:0; }
+.fin .certificat .certificat-nom{ color:var(--encre); }
+.fin .certificat .certificat-nom.vide{ color:var(--encre-3); }
+.certificat-nom{ font-size:clamp(1.6rem,5vw,2.2rem); font-weight:800; letter-spacing:-.035em; line-height:1.05; margin:0 0 .3rem; min-height:1.1em; overflow-wrap:anywhere; }
+.certificat-nom.vide{ color:var(--encre-3); }
+.certificat-ligne{ color:var(--encre-2); font-size:.9375rem; margin:0; }
+.certificat-pied{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; }
+.certificat-pied span{ font-size:.8125rem; font-weight:600; background:var(--creux); border-radius:var(--r-pilule); padding:.3rem .75rem; }
+.certificat-apercu{ font-size:.8125rem; color:var(--sur-jaune); background:var(--jaune); border-radius:10px; padding:.45rem .75rem; margin-top:1rem; display:inline-block; }
+
+.champ-nom{ width:100%; text-align:left; }
+.champ-nom label{ display:block; font-weight:700; font-size:.9375rem; margin-bottom:.4rem; }
+.champ-nom input{
+  width:100%; font:inherit; font-size:1.0625rem; padding:.85rem 1.1rem;
+  border:2px solid var(--bord-fort); border-radius:16px; background:var(--surface); color:var(--encre);
+  transition:border-color .2s;
+}
+.champ-nom input:focus{ outline:none; border-color:var(--bleu); }
+.champ-nom small{ display:block; margin-top:.4rem; color:var(--encre-2); font-size:.8125rem; }
+.bouton.linkedin{ background:var(--encre); border-color:var(--encre); }
+.bouton:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+
+/* ---------- impression du certificat ---------- */
+#impression{ display:none; }
+@media print{
+  body > *:not(#impression){ display:none !important; }
+  #impression{ display:block; padding:2cm; }
+  #impression .certificat{ border:2px solid var(--encre); }
+  *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+
+/* ---------- mouvement réduit : tout est là, tout de suite ---------- */
+@media (prefers-reduced-motion:reduce){
+  .joue .m, .joue .cle, .ecran > *, .mot-item, .choix button, .reserve button,
+  .retour, .piege-verite, .lecteur, .cit-hero-badge, .sceau, .etiquette .puce,
+  .cit-hero h1.joue .surligne{ animation:none !important; }
+  .eclats{ display:none; }
+  .vf-carte, .choix button{ transition:none; }
+}
+
+/* ---------- ajustements ---------- */
+/* L'examen est « encre » : sa barre doit rester visible sur le crème. */
+.lecteur.t-encre .lecteur-barre i{ background:var(--encre); }
+/* La carte figée après la réponse : plus de geste, le tampon dit la vérité. */
+.vf-carte.figee{ cursor:default; touch-action:auto; animation:depli 300ms var(--courbe); transform-origin:top; }
+@media (hover:none){ .lecteur-bas .aide{ display:none; } }
+.lecteur-bas .bouton:focus-visible, .fin-actions .bouton:focus-visible{ outline:3px solid var(--bleu); outline-offset:3px; }
+.lecteur-bas .bouton:focus:not(:focus-visible){ outline:none; }
+
+/* ---------- la note finale ----------
+   Un bloc encre, la note en très gros au jaune : c'est le chiffre qu'on
+   retiendra et qu'on partagera, il doit peser plus que le score brut. */
+.note-finale{
+  width:100%; margin:1.5rem 0 .5rem; text-align:left;
+  background:var(--encre); color:var(--creme); border-radius:24px;
+  padding:1.4rem 1.5rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.25rem;
+  position:relative; overflow:hidden; isolation:isolate;
+}
+.note-finale::after{ content:''; position:absolute; z-index:-1; width:8rem; height:8rem; border-radius:50%; right:-3rem; top:-3.5rem; background:var(--bleu); }
+.note-gauche{ display:flex; flex-direction:column; gap:.2rem; }
+.note-sur{ font-size:.8125rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,250,240,.6); }
+.note-valeur{ font-size:clamp(3rem,11vw,4.25rem); font-weight:800; letter-spacing:-.05em; line-height:1; color:var(--jaune); font-variant-numeric:tabular-nums; }
+.note-valeur small{ font-size:.42em; color:rgba(255,250,240,.55); letter-spacing:-.02em; }
+.note-mention{ align-self:flex-start; margin-top:.35rem; background:var(--jaune); color:var(--encre); font-weight:800; font-size:.875rem; padding:.3rem .8rem; border-radius:var(--r-pilule); animation:mention 380ms var(--courbe) 1.6s backwards; }
+@keyframes mention{ from{ opacity:0; transform:scale(1.7); } }
+.note-detail{ display:grid; gap:.45rem; min-width:14rem; }
+.note-detail div{ display:grid; grid-template-columns:1fr auto auto; gap:.75rem; align-items:baseline; font-size:.9375rem; }
+.note-detail span{ color:rgba(255,250,240,.75); }
+.note-detail b{ font-variant-numeric:tabular-nums; }
+.note-detail em{ font-style:normal; font-size:.75rem; font-weight:700; color:var(--encre); background:rgba(255,250,240,.85); padding:.1rem .45rem; border-radius:var(--r-pilule); }
+.note-finale.ratee .note-valeur{ color:var(--creme); }
+@media (prefers-reduced-motion:reduce){ .note-mention{ animation:none; } }
+
+/* ============================================================
+   APRÈS LES TESTS DU 28/09 : reprise, retour, lexique, partage
+   ============================================================ */
+
+/* Revenir en arrière : discret, à gauche, jamais à l'examen. */
+.precedent{
+  display:inline-flex; align-items:center; gap:.3rem; cursor:pointer;
+  font:inherit; font-weight:700; font-size:.9375rem; color:var(--encre);
+  background:transparent; border:0; padding:.6rem .5rem; border-radius:var(--r-pilule);
+  transition:background-color .2s;
+}
+.precedent[hidden]{ display:none; }
+.precedent:hover{ background:var(--creux); }
+.precedent:focus-visible{ outline:3px solid var(--bleu); outline-offset:2px; }
+.precedent svg{ width:1.1rem; height:1.1rem; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+@media (max-width:30rem){ .precedent span{ display:none; } }
+
+/* « Lire la suite » : même bouton, mais il dit qu'il reste du texte. */
+.lecteur-bas .bouton.suite{ background:var(--surface); color:var(--encre); border-color:var(--bord-fort); }
+.lecteur-bas .bouton.suite:hover{ background:var(--jaune); border-color:var(--jaune); }
+
+/* Le bandeau de reprise, en tête d'écran. */
+.reprise{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem 1rem;
+  background:var(--jaune); color:var(--sur-jaune); border-radius:14px; padding:.65rem 1rem; margin:0 0 1.5rem;
+  font-size:.9375rem; font-weight:600;
+}
+.lien{ font:inherit; font-weight:700; color:var(--encre); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:2px; }
+.note-essai{ margin:1.25rem 0 0; font-size:.9375rem; color:var(--encre-2); background:var(--creux); border-radius:14px; padding:.75rem 1rem; }
+
+/* Un terme du lexique : souligné en pointillé, cliquable, dans le fil du texte. */
+.terme{
+  font:inherit; color:inherit; background:none; border:0; padding:0; margin:0; cursor:help;
+  text-decoration:underline dotted; text-decoration-color:var(--ton,var(--bleu)); text-decoration-thickness:2px; text-underline-offset:4px;
+}
+.terme:hover, .terme:focus-visible{ text-decoration-style:solid; outline:none; }
+.bulle{
+  position:fixed; z-index:80; background:var(--encre); color:var(--creme);
+  border-radius:16px; padding:.85rem 1rem; font-size:.9375rem; line-height:1.45;
+  animation:depli 220ms var(--courbe); transform-origin:top;
+}
+.bulle[hidden]{ display:none; }
+.bulle strong{ display:block; color:var(--jaune); margin-bottom:.15rem; }
+
+.lexique{ display:grid; gap:.6rem; grid-template-columns:repeat(auto-fill,minmax(16rem,1fr)); margin:0; }
+.lexique-item{ background:var(--surface); border:1px solid var(--bord); border-radius:16px; padding:.85rem 1rem; }
+.lexique-item dt{ font-weight:700; }
+.lexique-item dd{ margin:.2rem 0 0; color:var(--encre-2); font-size:.9375rem; line-height:1.45; }
+
+/* Le barème, sur l'écran d'introduction de l'examen. */
+.bareme{ margin-top:1.5rem; background:var(--surface); border:1px solid var(--bord); border-radius:18px; padding:1rem 1.2rem; }
+.bareme p{ margin:.25rem 0 .6rem; font-size:.9375rem; color:var(--encre-2); }
+.bareme ul{ list-style:none; margin:0; padding:0; display:grid; gap:.35rem; }
+.bareme li{ display:flex; justify-content:space-between; gap:1rem; font-size:.9375rem; }
+.bareme li span{ color:var(--encre-2); font-variant-numeric:tabular-nums; }
+.note-plafond{ flex-basis:100%; margin:0; font-size:.875rem; color:rgba(255,250,240,.72); }
+
+/* Partager. */
+.partage{ display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center; margin:.5rem 0 .75rem; }
+.partage .bouton{ cursor:pointer; font-family:inherit; }
+.note-linkedin{ display:block; margin-top:.6rem; font-size:.8125rem; color:var(--encre-2); text-align:center; }
+.champ-nom input.attention{ border-color:var(--rouge); }
+
+/* Le pont vers l'app. */
+.pont-app{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:1rem;
+  width:100%; margin-top:1.5rem; text-align:left; text-decoration:none; color:var(--encre);
+  background:var(--jaune); border-radius:22px; padding:1.1rem 1.25rem;
+  transition:transform .2s var(--courbe);
+}
+.pont-app:hover{ transform:translateY(-3px); color:var(--encre); }
+.pont-app:focus-visible{ outline:3px solid var(--bleu); outline-offset:3px; }
+.pont-rond{ width:3rem; height:3rem; border-radius:50%; background:var(--encre); color:var(--creme); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.5rem; }
+.pont-rond b{ color:var(--rouge); }
+.pont-texte strong{ display:block; font-size:1.0625rem; letter-spacing:-.01em; }
+.pont-texte span{ display:block; font-size:.9375rem; color:var(--sur-jaune); line-height:1.4; margin-top:.15rem; }
+.pont-fleche{ font-size:1.5rem; font-weight:800; transition:transform .2s var(--courbe); }
+.pont-app:hover .pont-fleche{ transform:translateX(4px); }
+.pont-app.grand{ padding:1.5rem 1.6rem; margin-top:3.5rem; }
+.pont-app.grand .pont-texte strong{ font-size:1.25rem; }
+
+/* Réaffiché après un retour en arrière : tout est déjà là, rien ne rejoue. */
+.fige, .fige *{ animation:none !important; }
+
+@media (prefers-reduced-motion:reduce){ .bulle{ animation:none; } }
+/* « Précédent » à gauche ; l'aide clavier reste collée à « Continuer ». */
+.lecteur-bas .precedent{ margin-right:auto; }
+.lecteur-bas .precedent:not([hidden]) ~ .aide{ margin-right:0; }
+
+/* Le P de l'App Store (images/sigle.png) au cœur des sceaux : même
+   proportion que sur l'icône, où il occupe à peu près la moitié du fond. */
+.sceau-coeur img{ width:50%; height:auto; display:block; }
+.mini-sceau span img{ width:58%; height:auto; display:block; }
+.pont-rond{ background:var(--surface); }
+.pont-rond img{ width:55%; height:auto; display:block; }
+
+/* ============================================================
+   LE CERTIFICAT VÉRIFIABLE (29/09/2026)
+   ============================================================ */
+/* En attendant le serveur : un rond qui bat, rien qui tourne à l'infini. */
+.correction{ display:flex; flex-direction:column; align-items:center; gap:1rem; padding:3rem 0; color:var(--encre-2); }
+.correction p{ margin:0; font-weight:600; }
+.correction-rond{ width:3rem; height:3rem; border-radius:50%; background:var(--jaune); animation:battement 1.4s ease-in-out infinite; }
+.choix button.attente{ border-color:var(--bleu); animation:battement 1.4s ease-in-out infinite; }
+.certificat-id{ font-variant-numeric:tabular-nums; }
+.certificat-id strong{ letter-spacing:.06em; }
+.champ-nom .fin-actions .bouton{ text-decoration:none; }
+.mon-certificat{ flex-basis:100%; margin:0; font-size:.9375rem; color:rgba(255,250,240,.8); }
+.mon-certificat a{ color:var(--jaune); }
+.mon-certificat strong{ letter-spacing:.06em; color:var(--creme); }
+@media (prefers-reduced-motion:reduce){ .correction-rond, .choix button.attente{ animation:none; } }
+
+/* ---------- la page de vérification ---------- */
+.verif{ padding-top:2.5rem; }
+.verdict{ display:flex; align-items:center; gap:1rem; border-radius:22px; padding:1.1rem 1.3rem; margin:0 0 1.5rem; }
+.verdict p{ margin:0; }
+.verdict strong{ display:block; font-size:1.25rem; letter-spacing:-.02em; }
+.verdict-rond{ flex:none; width:2.75rem; height:2.75rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.3rem; color:#fff; }
+.verdict.attente{ background:var(--creux); color:var(--encre-2); }
+.verdict.attente .verdict-rond{ background:var(--jaune); animation:battement 1.4s ease-in-out infinite; }
+.verdict.valide{ background:#D6F5E3; color:#064A2E; }
+.verdict.valide .verdict-rond{ background:var(--vert); }
+.verdict.invalide{ background:#FFE1D9; color:#7A1E0A; }
+.verdict.invalide .verdict-rond{ background:var(--brique); }
+.verif .certificat{ margin-top:0; }
+.verif .certificat p{ max-width:none; }
+.verif .certificat-nom{ color:var(--encre); }
+@media (prefers-reduced-motion:reduce){ .verdict.attente .verdict-rond{ animation:none; } }
+/* `hidden` doit gagner sur le display:flex des rangées de boutons. */
+.champ-nom [hidden], .examen-carte [hidden]{ display:none !important; }
+
+/* Le titulaire ajoute son certificat à LinkedIn en un clic. */
+.pour-titulaire{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;
+  background:var(--jaune); border-radius:22px; padding:1.2rem 1.35rem; margin:1.5rem 0;
+}
+.pour-titulaire strong{ font-size:1.125rem; }
+.pour-titulaire p{ margin:.2rem 0 0; color:var(--sur-jaune); font-size:.9375rem; max-width:28rem; }
+.bouton.linkedin{ background:#0A66C2; border-color:#0A66C2; color:#fff; text-decoration:none; }
+.bouton.linkedin:hover{ background:#004182; border-color:#004182; color:#fff; }
+.mon-certificat{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.75rem; }

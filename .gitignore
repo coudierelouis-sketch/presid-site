@@ -6,3 +6,7 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# La banque d'examen contient les bonnes réponses, et ce dépôt est PUBLIC.
+# Sauvegarde : dépôt privé presid (elyzee27), docs/certification/banque.js.
+worker/banque.js

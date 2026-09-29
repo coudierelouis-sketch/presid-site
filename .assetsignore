@@ -13,3 +13,8 @@ wrangler.jsonc
 package.json
 package-lock.json
 README.md
+
+# Le serveur de la certification : la banque d'examen contient les bonnes
+# réponses, elle ne doit JAMAIS être servie (29/09/2026).
+worker
+.dev.vars

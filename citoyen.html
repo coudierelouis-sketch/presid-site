@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<!-- Page publique depuis le 29/09/2026, mais la certification reste en
+     « aperçu » (CERTIFICATION_OUVERTE = false dans citoyen.js) tant que le
+     comité n'a pas relu les contenus et qu'il n'existe pas de page de
+     vérification. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="presid">
+<meta property="og:title" content="Citoyen éclairé — la certification presid">
+<meta property="og:description" content="Huit modules courts, un examen, une note sur 20. Comprendre qui décide quoi, voter en connaissance de cause, démêler le vrai du faux.">
+<meta property="og:url" content="https://presid.app/citoyen">
+<meta property="og:image" content="https://presid.app/images/partage.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>Citoyen éclairé — la certification presid</title>
+<meta name="description" content="Huit modules courts pour comprendre les institutions, voter en connaissance de cause et vérifier l'information. Un examen final, une certification à afficher sur LinkedIn.">
+<link rel="canonical" href="https://presid.app/citoyen">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="citoyen.css">
+<script>
+/* Même amorce que l'accueil : la rivière part de zéro, et tout redevient
+   visible au bout d'1,5 s si anim.js n'a pas tourné. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
+  }
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
+<script src="citoyen-data.js" defer></script>
+<script src="citoyen.js" defer></script>
+</head>
+<body>
+
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+    <nav class="nav">
+      <a href="citoyen.html" aria-current="page">Citoyen éclairé</a>
+      <a href="assistance.html">Assistance</a>
+      <a href="sources.html">Sources</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="enveloppe cit-hero">
+    <div class="confettis" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="cit-hero-texte">
+      <p class="etiquette"><span class="puce"></span> La certification presid</p>
+      <h1 class="texte-anime" data-anime>Devenez citoyen <span class="surligne">éclairé.</span></h1>
+      <p class="chapo texte-anime" data-anime>Huit modules courts pour comprendre qui décide quoi, voter en
+        connaissance de cause et démêler le vrai du faux. Un examen final, et
+        une certification à afficher sur LinkedIn.</p>
+      <div class="actions">
+        <button type="button" class="bouton" data-ouvrir="suite">Commencer</button>
+        <a class="bouton fantome" href="#modules">Voir les modules</a>
+      </div>
+      <ul class="meta">
+        <li><strong>8</strong> modules</li>
+        <li><strong>≈ 2 h 30</strong> au total</li>
+        <li><strong>40</strong> questions à l'examen</li>
+        <li><strong>0</strong> compte à créer</li>
+      </ul>
+    </div>
+
+    <div class="cit-hero-badge" aria-hidden="true">
+      <div class="badge">
+        <svg class="sceau" viewBox="0 0 200 200">
+          <defs><path id="cercle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+          <circle cx="100" cy="100" r="96" class="sceau-fond"/>
+          <text><textPath href="#cercle" textLength="486" lengthAdjust="spacing">CITOYEN ÉCLAIRÉ · PRESID · CITOYEN ÉCLAIRÉ · PRESID ·</textPath></text>
+        </svg>
+        <div class="sceau-coeur"><img src="images/sigle.png" alt=""></div>
+      </div>
+      <div class="badge-carte">
+        <span class="badge-sur">Certification</span>
+        <strong>Citoyen éclairé</strong>
+        <span class="badge-emetteur">presid · sans expiration</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere" id="modules">
+    <div class="titre-rangee">
+      <h2>Le parcours</h2>
+      <p class="progression-texte" id="progression-texte">0 module sur 8</p>
+    </div>
+    <div class="progression" id="progression" aria-hidden="true"></div>
+    <div class="modules" id="liste-modules"></div>
+
+    <div class="examen-carte" id="examen-carte">
+      <div>
+        <span class="etiquette claire">Examen final</span>
+        <h3>40 questions, 30 bonnes réponses pour être certifié</h3>
+        <p>Cinq questions par module, tirées au hasard, jamais celles des
+          modules. À la fin, une note sur 20 et une mention. Vous pouvez le
+          tenter dès maintenant, mais il se réussit mieux après les huit
+          modules.</p>
+      </div>
+      <button type="button" class="bouton clair" data-ouvrir="examen">Passer l'examen</button>
+      <p class="mon-certificat" id="mon-certificat" hidden></p>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Ce que la certification atteste</h2>
+    <div class="grille">
+      <div class="carte jaune"><div class="numero">1</div><h3>Les institutions</h3>
+        <p>Expliquer comment fonctionnent les institutions françaises et européennes.</p></div>
+      <div class="carte ciel"><div class="numero">2</div><h3>Qui décide quoi</h3>
+        <p>Dire si une décision relève de l'État, du Parlement, de l'Union ou d'une collectivité.</p></div>
+      <div class="carte vert"><div class="numero">3</div><h3>Le vote</h3>
+        <p>Connaître le déroulement des élections et ses droits d'électeur.</p></div>
+      <div class="carte sable"><div class="numero">4</div><h3>L'information</h3>
+        <p>Distinguer un fait d'une opinion, vérifier une source, repérer une manipulation.</p></div>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Les règles du jeu</h2>
+    <ul class="liste">
+      <li><strong>Des connaissances, jamais des opinions.</strong> Chaque
+        question porte sur un fait vérifiable, et chaque réponse renvoie à sa
+        source. Aucune question ne vous demande ce que vous pensez.</li>
+      <li><strong>Presque rien ne quitte votre navigateur.</strong> Votre
+        progression dans les modules reste sur cet appareil. L'examen, lui,
+        est corrigé par le serveur de presid, sinon le certificat ne
+        prouverait rien : la session est anonyme et s'efface au bout de deux
+        heures. Votre nom n'est envoyé qu'une fois, pour signer le
+        certificat, et n'est stocké nulle part. Pas de compte, pas de mesure
+        d'audience.</li>
+      <li><strong>Un certificat vérifiable.</strong> Chaque certificat porte
+        un identifiant unique et un lien de vérification : n'importe qui,
+        recruteur compris, peut vérifier qu'il est authentique.</li>
+    </ul>
+    <div class="encart">
+      <p><strong>Est-ce un diplôme ?</strong> Non. C'est une certification
+        délivrée par presid, pas un diplôme d'État. Elle atteste des
+        connaissances vérifiées par un examen, et s'affiche comme telle sur un
+        CV ou un profil LinkedIn.</p>
+    </div>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Qui a écrit ces modules</h2>
+    <div class="grille" id="equipe"></div>
+  </section>
+
+  <section class="enveloppe riviere">
+    <h2>Le petit lexique</h2>
+    <p class="chapo">Pendant les modules, les mots soulignés en pointillé
+      s'expliquent d'un clic. Les voici tous.</p>
+    <dl class="lexique" id="lexique"></dl>
+  </section>
+
+  <section class="enveloppe riviere">
+    <a class="pont-app grand" href="https://apps.apple.com/fr/app/id6800288453" target="_blank" rel="noopener">
+      <span class="pont-rond"><img src="images/sigle.png" alt=""></span>
+      <span class="pont-texte"><strong>La certification, c'est la théorie. L'app, c'est la pratique.</strong>
+        <span>Swipez des sujets, sans nom ni visage, et découvrez quelles
+          personnalités de 2027 pensent comme vous, preuves à l'appui.</span></span>
+      <span class="pont-fleche" aria-hidden="true">→</span>
+    </a>
+  </section>
+
+</main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="index.html">L'application</a>
+      <a href="sources.html">Sources</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+    </div>
+    <p>© 2026 Louis Coudière. presid n'est affilié à aucun parti, aucun
+      candidat ni aucune institution publique, et n'est pas un service de
+      l'État. La certification Citoyen éclairé n'est pas un diplôme d'État.</p>
+  </div>
+</footer>
+
+<!-- Le lecteur : un module ou l'examen, écran par écran. -->
+<div class="lecteur" id="lecteur" role="dialog" aria-modal="true" aria-labelledby="lecteur-titre" hidden>
+  <div class="lecteur-haut">
+    <button type="button" class="fermer" id="fermer" aria-label="Fermer et revenir au parcours">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="lecteur-titre" id="lecteur-titre"></div>
+    <div class="lecteur-compte" id="lecteur-compte"></div>
+  </div>
+  <div class="lecteur-barre" id="lecteur-barre"><i></i></div>
+  <div class="scene" id="scene" aria-live="polite"></div>
+  <div class="lecteur-bas">
+    <button type="button" class="precedent" id="precedent" hidden aria-label="Écran précédent">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span>Précédent</span>
+    </button>
+    <button type="button" class="bouton" id="continuer">Continuer</button>
+  </div>
+</div>
+
+<div id="impression" aria-hidden="true"></div>
+
+</body>
+</html>

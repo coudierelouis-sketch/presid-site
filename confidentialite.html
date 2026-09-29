@@ -28,6 +28,7 @@ setTimeout(function () {
   <div class="enveloppe entete-rangee">
     <a class="marque" href="index.html">presid<span class="point">.</span></a>
     <nav class="nav">
+      <a href="citoyen.html">Citoyen éclairé</a>
       <a href="assistance.html">Assistance</a>
       <a href="sources.html">Sources</a>
       <a href="confidentialite.html" aria-current="page">Confidentialité</a>
@@ -39,14 +40,15 @@ setTimeout(function () {
 <main class="enveloppe etroit texte">
   <div class="riviere">
   <h1 style="font-size:clamp(2rem,5vw,2.75rem);margin-top:2.5rem">Politique de confidentialité</h1>
-  <p class="date">En vigueur au 11 août 2026. Adresse de contact mise à jour le
-    8 septembre 2026 — le traitement des données, lui, n'a pas changé : il
-    n'existe pas.</p>
+  <p class="date">En vigueur au 29 septembre 2026. Changement : la
+    certification Citoyen éclairé du site (voir plus bas) passe par un
+    serveur. L'application, elle, n'a pas changé : elle ne collecte
+    toujours rien.</p>
 
   <div class="encart">
-    <p><strong>presid ne collecte aucune donnée.</strong> Pas de compte, pas de
-    serveur, pas de mesure d'audience, pas de publicité, pas de traceur.
-    Vos réponses ne quittent jamais votre téléphone.</p>
+    <p><strong>L'application presid ne collecte aucune donnée.</strong> Pas de
+    compte, pas de serveur, pas de mesure d'audience, pas de publicité, pas de
+    traceur. Vos réponses ne quittent jamais votre téléphone.</p>
   </div>
   </div>
 
@@ -74,11 +76,40 @@ setTimeout(function () {
   cette action.</p>
 
   <h2>Ce site</h2>
-  <p>Ce site est un site statique : il n'utilise ni cookie, ni traceur, ni
-  outil de mesure d'audience, et aucun script de mesure ou de traçage. La police de
-  caractères est hébergée avec le site : votre navigateur ne contacte aucun
-  tiers, pas même Google&nbsp;Fonts. Les seuls liens sortants sont ceux que
-  vous choisissez de suivre.</p>
+  <p>Ce site n'utilise ni cookie, ni traceur, ni outil de mesure d'audience,
+  et aucun script de mesure ou de traçage. La police de caractères est
+  hébergée avec le site : votre navigateur ne contacte aucun tiers, pas même
+  Google&nbsp;Fonts. Les seuls liens sortants sont ceux que vous choisissez
+  de suivre. Le site est hébergé par Cloudflare, qui traite les requêtes
+  techniques nécessaires à son affichage.</p>
+
+  <h2>La certification Citoyen éclairé</h2>
+  <p>C'est la seule partie du site qui envoie quelque chose à un serveur, et
+  seulement ce qui suit.</p>
+  <p><strong>Les modules.</strong> Votre progression, vos réponses aux quiz et
+  le nom que vous tapez sont gardés dans la mémoire de votre navigateur
+  (localStorage), sur votre appareil. Ils ne sont transmis à personne.
+  Effacer les données du site dans votre navigateur les supprime.</p>
+  <p><strong>L'examen.</strong> Pour qu'un certificat prouve quelque chose,
+  l'examen est tiré et corrigé par le serveur de presid. Il enregistre une
+  session anonyme : les questions tirées et, pour chacune, si la réponse est
+  juste. Aucun nom, aucune adresse, aucun identifiant de compte. Cette
+  session s'efface automatiquement au bout de deux heures.</p>
+  <p><strong>Le certificat.</strong> Si vous réussissez et demandez votre
+  certificat, votre nom est envoyé une fois au serveur, qui le signe avec
+  votre note et la date, puis vous le renvoie. <strong>Il n'est stocké
+  nulle part.</strong> Le certificat vit uniquement dans son lien de
+  vérification : le nom y figure après le signe « # », partie de l'adresse
+  que les navigateurs n'envoient jamais au serveur, si bien qu'il ne figure
+  dans aucun journal. Toute personne à qui vous donnez ce lien peut lire
+  votre nom et votre note : c'est son but. Pour limiter les abus, le serveur
+  compte, sans nom, combien de certificats ont été délivrés par examen réussi
+  (trois au plus), pendant trente jours.</p>
+  <p>Ce traitement repose sur votre demande (article 6.1.b du RGPD) : il
+  n'a lieu que si vous passez l'examen et demandez un certificat. Comme presid
+  ne conserve pas les certificats, il ne peut ni les retrouver ni les
+  retirer : pour ne plus diffuser le vôtre, il suffit de ne plus partager son
+  lien.</p>
 
   <h2>Enfants</h2>
   <p>L'application ne s'adresse pas spécifiquement aux enfants et ne collecte
@@ -86,10 +117,12 @@ setTimeout(function () {
 
   <h2>Vos droits</h2>
   <p>Le RGPD ouvre des droits d'accès, de rectification et d'effacement sur
-  les données personnelles détenues par un éditeur. Dans le cas de presid, ces
-  droits sont sans objet faute de traitement : l'éditeur ne détient aucune
-  donnée vous concernant. Vous gardez la maîtrise complète des données
-  locales par le bouton d'effacement.</p>
+  les données personnelles détenues par un éditeur. presid ne détient aucune
+  donnée vous concernant : l'application n'envoie rien, et le serveur de la
+  certification ne garde ni nom ni coordonnées. Vous gardez la maîtrise
+  complète des données locales : le bouton d'effacement dans l'application,
+  les réglages de votre navigateur pour le site. Pour toute question,
+  écrivez à l'adresse ci-dessous.</p>
 
   <h2>Modifications</h2>
   <p>Toute évolution de cette politique sera publiée sur cette page, avec sa
