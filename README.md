@@ -184,3 +184,59 @@ verifier.html/.js   presid.app/verifier#<certificat> : la page « Afficher le di
 - Les quiz de module (25 % de la note) restent dans le navigateur, donc
   déclaratifs ; l'effet d'une triche est borné, car chaque mention exige
   aussi un score d'examen que seul le serveur connaît.
+
+## La question du jour (08/10/2026)
+
+L'app lit `/consultations.json` (fichier SIGNÉ, ne jamais l'éditer à la main)
+et envoie les avis à `/api/consultation/*`. Ce que le serveur garde et
+pourquoi : en-tête de `worker/consultation.js`.
+
+### En ligne depuis le 08/10/2026
+
+Base D1 `presid-consultations` créée (WEUR), schéma appliqué, Worker déployé.
+Vérifié en ligne ce jour-là : fichiers internes en 404 (worker, migrations,
+brouillons, README, .git), fichier des questions signé et valide, vote en
+text/plain refusé (415), requête énorme refusée (413), injection dans l'id
+refusée (400), limite par IP active (429 après une rafale), certification
+intacte.
+
+**Confidentialité** : la version qui décrit la question du jour (consentement
+explicite avant toute connexion, retrait dans Profil, Cloudflare sous-traitant)
+est en ligne depuis le 12/10/2026, pour la 1.0.6. L'ancienne est gardée dans
+`brouillons/confidentialite-avant-1.0.6.html` (non servi).
+
+### Publier une question
+
+Dans `~/elyzee27` : écrire la question dans `docs/consultations/questions.json`, puis
+
+```
+node scripts/consultations.mjs publier             # vérifie, signe, écrit consultations.json ici
+cd ~/presid-site && npx wrangler deploy
+```
+
+On peut programmer plusieurs jours d'avance : une question n'apparaît qu'à sa date.
+
+### Quand une question est gelée (« résultats en vérification »)
+
+Le Worker gèle l'affichage d'une question dès qu'une tranche de 10 minutes
+dépasse un seuil d'avis, ou un seuil plus bas presque à sens unique. Les
+valeurs réelles sont des SECRETS du Worker (`PIC_TRANCHE`, `PIC_SENS_MIN`,
+`PIC_SENS_PART`, posés par `wrangler secret put`) : ce dépôt est public, et un
+seuil connu se contourne (audit V-03, 12/10/2026). Les limites de débit sont
+par question et, en IPv6, par préfixe /64 (`wrangler.jsonc`).
+
+```
+# voir les tranches de la question
+npx wrangler d1 execute presid-consultations --remote --command \
+  "SELECT choix, tranche, n, datetime(tranche*600,'unixepoch') AS debut FROM votes WHERE question='2026-10-12' ORDER BY tranche"
+# retirer une tranche jugée frauduleuse
+npx wrangler d1 execute presid-consultations --remote --command \
+  "DELETE FROM votes WHERE question='2026-10-12' AND tranche=2985754"
+# dégeler
+npx wrangler d1 execute presid-consultations --remote --command \
+  "DELETE FROM gels WHERE question='2026-10-12'"
+```
+
+Les dates de réserve électorale sont en double : `worker/consultation.js` et
+`elyzee27/src/lib/reserve.ts`. Les mettre à jour ensemble à la publication
+du décret.

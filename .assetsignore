@@ -18,3 +18,8 @@ README.md
 # réponses, elle ne doit JAMAIS être servie (29/09/2026).
 worker
 .dev.vars
+
+# Le schéma de la base de la question du jour : rien de secret, rien à servir.
+migrations
+# Les brouillons de pages (ex. la confidentialité de la prochaine version).
+brouillons

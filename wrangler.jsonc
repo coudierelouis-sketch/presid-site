@@ -1,12 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "presid-site",
-  // Le Worker ne sert QUE la certification (/api/*) ; tout le reste part
-  // directement des fichiers statiques, sans passer par lui.
+  // Le Worker ne sert QUE l'API (/api/*) : la certification et la question du
+  // jour. Tout le reste part directement des fichiers statiques.
   "main": "worker/index.js",
   "compatibility_date": "2026-09-08",
+  // COUPÉE le 08/10/2026 : la route /api/consultation/voter reçoit une
+  // opinion politique, et un journal d'invocation la mettrait à côté d'une
+  // adresse IP. Ne pas rallumer sans exclure cette route.
   "observability": {
-    "enabled": true
+    "enabled": false
   },
   "assets": {
     "directory": ".",
@@ -17,6 +20,39 @@
   // Aucun nom n'y est jamais écrit.
   "kv_namespaces": [
     { "binding": "EXAMENS", "id": "e9ad454433aa4d80a2abe40c8e80744d" }
+  ],
+  // Question du jour : compteurs pour/contre par tranche de 10 min, rien
+  // d'autre. Schéma dans migrations/. L'id s'obtient à la création :
+  // `npx wrangler d1 create presid-consultations`.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "presid-consultations",
+      "database_id": "1330f666-cfc1-43da-bc90-a44774f2e457",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // Avis : limite par question ET par adresse (clé = jour + question +
+  // adresse, cf. worker/consultation.js). IPv4 : 10 par minute, large exprès
+  // (CGNAT des opérateurs mobiles). IPv6 : 3 par minute et par /64 — un
+  // foyer, pas une adresse (audit V-03, 12/10/2026).
+  "ratelimits": [
+    {
+      "name": "LIMITE_VOTES",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 }
+    },
+    {
+      "name": "LIMITE_VOTES_V6",
+      "namespace_id": "1003",
+      "simple": { "limit": 3, "period": 60 }
+    },
+    // Lecture des résultats : plus large (l'app relit à chaque ouverture).
+    {
+      "name": "LIMITE_LECTURES",
+      "namespace_id": "1002",
+      "simple": { "limit": 60, "period": 60 }
+    }
   ]
   // Secret : CERT_CLE (clé de signature des certificats), posé par
   // `wrangler secret put CERT_CLE`. Ne jamais le committer.

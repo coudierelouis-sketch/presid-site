@@ -1,5 +1,7 @@
 /**
- * Le serveur de presid.app : il ne fait QUE la certification Citoyen éclairé.
+ * Le serveur de presid.app : il fait la certification Citoyen éclairé et,
+ * depuis le 08/10/2026, compte les avis de la question du jour
+ * (`worker/consultation.js`, qui documente ce qu'il garde — des compteurs).
  * Tout le reste du site reste statique et part directement des fichiers
  * (`run_worker_first` ne route ici que /api/*).
  *
@@ -23,6 +25,7 @@
  *   de donnée ici.
  */
 import { BANQUE } from './banque.js';
+import { evolution, resultats, voter } from './consultation.js';
 
 const PAR_MODULE = 5;
 const SEUIL = 30;
@@ -36,6 +39,8 @@ const DUREE_SESSION = 2 * 60 * 60;        // secondes
 const DUREE_COMPTEUR = 30 * 24 * 60 * 60;
 const CERTIFICATS_PAR_EXAMEN = 3;
 const ADRESSE_VERIF = 'https://presid.app/verifier#';
+/** Octets. La plus grosse requête légitime (fin d'examen) en fait moins de 1 000. */
+const TAILLE_MAX = 8 * 1024;
 
 export default {
   async fetch(requete, env) {
@@ -43,8 +48,21 @@ export default {
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(requete);
     if (requete.method !== 'POST') return json({ erreur: 'methode' }, 405);
 
+    // JSON OBLIGATOIRE (08/10/2026). Sans cette règle, n'importe quel site
+    // pouvait faire envoyer un avis par le navigateur de ses visiteurs : un
+    // POST en text/plain part sans contrôle préalable du navigateur (CORS).
+    // Exiger application/json force ce contrôle, et comme ce Worker ne répond
+    // à aucun contrôle CORS, le navigateur bloque la requête venue d'ailleurs.
+    // Les pages du site et l'app envoient déjà ce type.
+    if (!(requete.headers.get('Content-Type') ?? '').startsWith('application/json')) {
+      return json({ erreur: 'type' }, 415);
+    }
+    // Aucune requête légitime ne dépasse quelques centaines d'octets.
+    const brut = await requete.text();
+    if (brut.length > TAILLE_MAX) return json({ erreur: 'taille' }, 413);
+
     let corps;
-    try { corps = await requete.json(); } catch { return json({ erreur: 'corps' }, 400); }
+    try { corps = JSON.parse(brut); } catch { return json({ erreur: 'corps' }, 400); }
     if (!corps || typeof corps !== 'object') return json({ erreur: 'corps' }, 400);
 
     try {
@@ -54,6 +72,9 @@ export default {
         case '/api/examen/terminer': return await terminer(env, corps);
         case '/api/certificat': return await delivrer(env, corps);
         case '/api/verifier': return await verifier(env, corps);
+        case '/api/consultation/voter': return await voter(requete, env, corps);
+        case '/api/consultation/resultats': return await resultats(requete, env, corps);
+        case '/api/consultation/evolution': return await evolution(requete, env, corps);
         default: return json({ erreur: 'introuvable' }, 404);
       }
     } catch {

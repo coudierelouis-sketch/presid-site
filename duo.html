@@ -40,12 +40,13 @@ setTimeout(function () {
     <div id="code" style="font-size:clamp(1.6rem,7vw,2.4rem);font-weight:800;letter-spacing:.14em;margin-top:.4rem;word-break:break-all">—</div>
   </div>
 
-  <p>Si presid est installé sur ce téléphone, l'application s'ouvre d'elle-même
-    sur la comparaison. Sinon, installez-la, ouvrez l'onglet <strong>Duel</strong>
+  <p>Si presid est installé sur ce téléphone, touchez le premier bouton : l'application
+    s'ouvre sur la comparaison. Sinon, installez-la, ouvrez l'onglet <strong>Duel</strong>
     et collez le code ci-dessus.</p>
 
   <div class="actions">
-    <a class="bouton" href="https://apps.apple.com/fr/app/id6800288453">Installer presid</a>
+    <a class="bouton" id="ouvrir" href="presid://duo">Ouvrir dans presid</a>
+    <a class="bouton fantome" href="https://apps.apple.com/fr/app/id6800288453">Installer presid</a>
     <a class="bouton fantome" href="index.html">Ce qu'est presid</a>
   </div>
   <p class="sous-bouton">La comparaison se calcule sur les deux téléphones.
@@ -71,8 +72,11 @@ setTimeout(function () {
    caractère hors de cet alphabet est rejeté plutôt qu'affiché. */
 (function () {
   var brut = new URLSearchParams(location.search).get('c') || '';
-  var propre = brut.toUpperCase().replace(/[^0-9ABCDEFGHJKMNPQRSTVWXYZ]/g, '').slice(0, 12);
+  var propre = brut.toUpperCase().replace(/[^0-9ABCDEFGHJKMNPQRSTVWXYZ]/g, '').slice(0, 120);
   document.getElementById('code').textContent = propre || 'aucun code dans le lien';
+  /* Le schéma presid:// ouvre l'app quand elle est installée ; le code part
+     de la page vers l'app, sur le téléphone, sans passer par un serveur. */
+  if (propre) document.getElementById('ouvrir').href = 'presid://duo?c=' + propre;
 })();
 </script>
 

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>presid — politique de confidentialité</title>
+<meta name="description" content="Politique de confidentialité de l'application presid : aucune donnée collectée.">
+<link rel="canonical" href="https://presid.app/confidentialite">
+<link rel="icon" href="images/icone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<script>
+/* Masque les éléments avant la première peinture, pour que la rivière parte de
+   zéro. Filet : si anim.js n'a pas tourné, tout redevient visible au bout
+   d'1,5 s — une page qui ne s'anime pas vaut mieux qu'une page vide. */
+document.documentElement.classList.add('anime');
+setTimeout(function () {
+  if (!document.querySelector('.riviere.coule')) {
+    document.documentElement.classList.remove('anime');
+  }
+}, 1500);
+</script>
+<script src="anim.js" defer></script>
+</head>
+<body>
+
+<header class="entete">
+  <div class="enveloppe entete-rangee">
+    <a class="marque" href="index.html">presid<span class="point">.</span></a>
+    <nav class="nav">
+      <a href="citoyen.html">Citoyen éclairé</a>
+      <a href="assistance.html">Assistance</a>
+      <a href="sources.html">Sources</a>
+      <a href="confidentialite.html" aria-current="page">Confidentialité</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="enveloppe etroit texte">
+  <div class="riviere">
+  <h1 style="font-size:clamp(2rem,5vw,2.75rem);margin-top:2.5rem">Politique de confidentialité</h1>
+  <p class="date">En vigueur depuis le 12 octobre 2026 (version 1.0.6 de
+    l'application). Changement : l'application propose une question du jour,
+    à laquelle on peut répondre pour ou contre, après avoir accepté la
+    connexion à presid.app. Cet avis est compté de façon anonyme sur le
+    serveur de presid (voir « La question du jour »). Tout le reste ne quitte
+    toujours pas votre téléphone.</p>
+
+  <div class="encart">
+    <p><strong>L'application presid ne collecte aucune donnée qui permette de vous identifier.</strong>
+    Pas de compte, pas de mesure d'audience, pas de publicité, pas de traceur.
+    Vos réponses aux sujets ne quittent jamais votre téléphone. La seule chose
+    qui en sort, si vous le choisissez, est un avis pour ou contre à la
+    question du jour, sans aucun identifiant.</p>
+  </div>
+  </div>
+
+  <h2>Ce qui est enregistré, et où</h2>
+  <p>Vos réponses aux sujets, votre progression et vos réglages sont stockés
+  dans la mémoire locale de l'application, sur votre appareil. Ils ne sont
+  transmis à personne — ni à l'éditeur, ni à un tiers. Tout ce qui les
+  concerne fonctionne hors ligne. La question du jour, seule partie de
+  l'application qui utilise le réseau, est décrite plus bas.</p>
+
+  <h2>Effacement</h2>
+  <p>L'onglet Profil comporte un bouton « Effacer mes réponses » qui supprime
+  immédiatement l'ensemble de ces données. Désinstaller l'application produit
+  le même effet. L'effacement est définitif : rien n'existe ailleurs qui
+  permettrait de restaurer une session.</p>
+
+  <h2>La question du jour</h2>
+  <p><strong>Rien sans votre accord.</strong> La première fois que vous
+  ouvrez la question du jour, l'application vous demande l'autorisation de se
+  connecter à presid.app et vous explique ce qui sera envoyé. Tant que vous
+  n'avez pas accepté, elle n'établit aucune connexion, ni à l'ouverture, ni en
+  arrière-plan. Votre avis étant une opinion politique, cet accord est un
+  consentement explicite au sens de l'article 9 du RGPD. Vous pouvez le
+  retirer à tout moment dans l'onglet Profil (« Retirer mon accord ») :
+  l'application cesse alors toute connexion.</p>
+  <p><strong>Ce que l'application télécharge.</strong> Une fois l'accord
+  donné, l'application télécharge la liste des questions du jour depuis
+  presid.app. Cette liste est signée : l'application refuse toute liste qui
+  n'aurait pas été publiée par l'éditeur.</p>
+  <p><strong>Ce que l'application envoie, et seulement si vous répondez.</strong>
+  La date de la question et votre avis (« pour » ou « contre »). Rien
+  d'autre : ni nom, ni compte, ni identifiant de l'appareil.</p>
+  <p><strong>Ce que le serveur garde.</strong> Un compteur par question,
+  par sens et par tranche de dix minutes, par exemple « question du 12
+  octobre, pour, entre 14 h et 14 h 10 : 37 ». Il ne garde ni votre adresse
+  IP, ni l'heure exacte, ni rien qui permette de savoir qui a répondu quoi.
+  Les journaux d'accès du serveur sont désactivés. Votre adresse IP sert
+  uniquement, le temps de la requête, à limiter le nombre d'avis envoyés
+  sur une même question depuis une même adresse (en IPv6, depuis un même
+  réseau) en une minute. Elle est alors transformée en une empreinte qui
+  change chaque jour, et n'est pas conservée. Le serveur est opéré par
+  Cloudflare, Inc., sous-traitant, qui traite l'adresse IP le temps de la
+  requête pour acheminer la connexion.</p>
+  <p><strong>Ce qui est affiché.</strong> La part de « pour » et de « contre »
+  parmi les utilisateurs qui ont répondu, en pourcentages entiers, à partir
+  de 100 avis. Ce n'est pas un sondage : les personnes qui répondent ne sont
+  pas tirées au sort. Aucun résultat n'est affiché la veille et le jour d'un
+  scrutin.</p>
+  <p><strong>Effacement.</strong> L'application garde la liste des questions
+  auxquelles vous avez répondu, pour ne pas vous les reposer. « Effacer mes
+  réponses » l'efface aussi. Côté serveur, il n'y a rien à effacer : un
+  compteur ne sait pas qui l'a fait monter. Pour la même raison, un avis
+  donné ne peut pas être retiré.</p>
+
+  <h2>Les autres sorties vers l'extérieur</h2>
+  <p><strong>Ouvrir une source.</strong> Chaque position affichée renvoie au
+  document qui la prouve. Toucher ce lien ouvre le site concerné dans votre
+  navigateur : à partir de là, c'est la politique de confidentialité de ce
+  site qui s'applique, et presid n'a plus aucun rôle.</p>
+  <p><strong>Partager une carte.</strong> Exporter votre résultat ouvre la
+  feuille de partage du système. L'image est fabriquée sur votre téléphone, et
+  c'est vous qui choisissez si elle part, et vers où. Rien n'est envoyé sans
+  cette action.</p>
+
+  <h2>Ce site</h2>
+  <p>Ce site n'utilise ni cookie, ni traceur, ni outil de mesure d'audience,
+  et aucun script de mesure ou de traçage. La police de caractères est
+  hébergée avec le site : votre navigateur ne contacte aucun tiers, pas même
+  Google&nbsp;Fonts. Les seuls liens sortants sont ceux que vous choisissez
+  de suivre. Le site est hébergé par Cloudflare, qui traite les requêtes
+  techniques nécessaires à son affichage.</p>
+
+  <h2>La certification Citoyen éclairé</h2>
+  <p>C'est la seule partie du site qui envoie quelque chose à un serveur, et
+  seulement ce qui suit.</p>
+  <p><strong>Les modules.</strong> Votre progression, vos réponses aux quiz et
+  le nom que vous tapez sont gardés dans la mémoire de votre navigateur
+  (localStorage), sur votre appareil. Ils ne sont transmis à personne.
+  Effacer les données du site dans votre navigateur les supprime.</p>
+  <p><strong>L'examen.</strong> Pour qu'un certificat prouve quelque chose,
+  l'examen est tiré et corrigé par le serveur de presid. Il enregistre une
+  session anonyme : les questions tirées et, pour chacune, si la réponse est
+  juste. Aucun nom, aucune adresse, aucun identifiant de compte. Cette
+  session s'efface automatiquement au bout de deux heures.</p>
+  <p><strong>Le certificat.</strong> Si vous réussissez et demandez votre
+  certificat, votre nom est envoyé une fois au serveur, qui le signe avec
+  votre note et la date, puis vous le renvoie. <strong>Il n'est stocké
+  nulle part.</strong> Le certificat vit uniquement dans son lien de
+  vérification : le nom y figure après le signe « # », partie de l'adresse
+  que les navigateurs n'envoient jamais au serveur, si bien qu'il ne figure
+  dans aucun journal. Toute personne à qui vous donnez ce lien peut lire
+  votre nom et votre note : c'est son but. Pour limiter les abus, le serveur
+  compte, sans nom, combien de certificats ont été délivrés par examen réussi
+  (trois au plus), pendant trente jours.</p>
+  <p>Ce traitement repose sur votre demande (article 6.1.b du RGPD) : il
+  n'a lieu que si vous passez l'examen et demandez un certificat. Comme presid
+  ne conserve pas les certificats, il ne peut ni les retrouver ni les
+  retirer : pour ne plus diffuser le vôtre, il suffit de ne plus partager son
+  lien.</p>
+
+  <h2>Enfants</h2>
+  <p>L'application ne s'adresse pas spécifiquement aux enfants. En dehors des
+  compteurs anonymes de la question du jour, alimentés seulement après un
+  accord explicite, elle ne collecte aucune donnée, quel que soit l'âge de la
+  personne qui l'utilise.</p>
+
+  <h2>Vos droits</h2>
+  <p>Le RGPD ouvre des droits d'accès, de rectification et d'effacement sur
+  les données personnelles détenues par un éditeur. presid ne détient aucune
+  donnée vous concernant : l'application n'envoie rien sans votre accord,
+  les avis de la question du jour ne sont que des compteurs qui ne
+  permettent pas de vous identifier, et le serveur de la certification ne
+  garde ni nom ni coordonnées. Vous gardez la maîtrise
+  complète des données locales : le bouton d'effacement dans l'application,
+  les réglages de votre navigateur pour le site. Pour toute question,
+  écrivez à l'adresse ci-dessous.</p>
+
+  <h2>Modifications</h2>
+  <p>Toute évolution de cette politique sera publiée sur cette page, avec sa
+  date d'entrée en vigueur. Si une version future de l'application devait
+  collecter quoi que ce soit, cela serait annoncé ici avant la mise à jour.</p>
+
+  <h2>Contact</h2>
+  <p><a href="mailto:louis.coudiere@presid.app">louis.coudiere@presid.app</a></p>
+</main>
+
+<footer class="pied">
+  <div class="enveloppe">
+    <div class="liens">
+      <a href="index.html">Accueil</a>
+      <a href="assistance.html">Assistance</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="https://apps.apple.com/fr/app/id6800288453">App Store</a>
+    </div>
+    <p>© 2026 Louis Coudière. presid n'est affilié à aucun parti, aucun
+      candidat ni aucune institution publique.</p>
+  </div>
+</footer>
+
+</body>
+</html>

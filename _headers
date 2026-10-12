@@ -22,3 +22,9 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: geolocation=(), camera=(), microphone=(), interest-cohort=()
+
+# La question du jour : relue par l'app à chaque ouverture. Cinq minutes de
+# cache suffisent à absorber un pic sans retarder une nouvelle question.
+/consultations.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300
