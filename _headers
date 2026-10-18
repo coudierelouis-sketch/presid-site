@@ -28,3 +28,11 @@
 /consultations.json
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=300
+
+/consultations-es.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/consultations-it.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300

@@ -216,6 +216,31 @@ cd ~/presid-site && npx wrangler deploy
 
 On peut programmer plusieurs jours d'avance : une question n'apparaît qu'à sa date.
 
+### Espagne et Italie (préparé le 18/10/2026, PAS ENCORE DÉPLOYÉ)
+
+Chaque pays a son fichier et ses compteurs : `/consultations-es.json` et
+`/api/consultation/es/*`, `/consultations-it.json` et `/api/consultation/it/*`.
+En base, les lignes espagnoles et italiennes sont préfixées (`es:2026-10-18`),
+la France ne change pas. Pas de migration de schéma.
+
+```
+node scripts/consultations.mjs publier --pays es   # écrit consultations-es.json ici
+node scripts/consultations.mjs publier --pays it
+cd ~/presid-site && npx wrangler deploy
+```
+
+Déployer le Worker AVANT ou EN MÊME TEMPS que le premier fichier espagnol :
+l'app 1.0.8 vote sur `/api/consultation/es/voter`, que l'ancien Worker ne
+connaît pas (404, avis perdu — mais jamais compté chez les Français).
+
+Pour surveiller ou dégeler une question espagnole, mêmes commandes que
+ci-dessous avec `question='es:2026-11-02'`.
+
+Réserve : les dates sont dans `PAYS` (`worker/consultation.js`), en double
+avec `elyzee27/src/data/<pays>/reserve.ts`. Espagne : résultats coupés du
+24/11 au 29/11 21 h (art. 69.7 LOREG, prudence). Italie : AUCUNE date, à
+remplir dès le décret de convocation.
+
 ### Quand une question est gelée (« résultats en vérification »)
 
 Le Worker gèle l'affichage d'une question dès qu'une tranche de 10 minutes

@@ -65,16 +65,23 @@ export default {
     try { corps = JSON.parse(brut); } catch { return json({ erreur: 'corps' }, 400); }
     if (!corps || typeof corps !== 'object') return json({ erreur: 'corps' }, 400);
 
+    // La question du jour : `/api/consultation/<action>` pour la France,
+    // `/api/consultation/<pays>/<action>` pour les autres (cf. consultation.js).
+    const consultation = /^\/api\/consultation\/(?:(es|it)\/)?(voter|resultats|evolution)$/.exec(url.pathname);
+
     try {
+      if (consultation) {
+        const [, pays = 'fr', action] = consultation;
+        if (action === 'voter') return await voter(requete, env, corps, pays);
+        if (action === 'resultats') return await resultats(requete, env, corps, pays);
+        return await evolution(requete, env, corps, pays);
+      }
       switch (url.pathname) {
         case '/api/examen/debut': return await debut(env);
         case '/api/examen/repondre': return await repondre(env, corps);
         case '/api/examen/terminer': return await terminer(env, corps);
         case '/api/certificat': return await delivrer(env, corps);
         case '/api/verifier': return await verifier(env, corps);
-        case '/api/consultation/voter': return await voter(requete, env, corps);
-        case '/api/consultation/resultats': return await resultats(requete, env, corps);
-        case '/api/consultation/evolution': return await evolution(requete, env, corps);
         default: return json({ erreur: 'introuvable' }, 404);
       }
     } catch {

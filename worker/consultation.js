@@ -38,6 +38,18 @@
  * - Pourcentages entiers, total arrondi à la centaine inférieure.
  * - Rien du tout la veille et le jour du scrutin (loi du 19 juillet 1977,
  *   même dates que `elyzee27/src/lib/reserve.ts`, provisoires elles aussi).
+ *   En Espagne, rien non plus les cinq jours sans sondage (art. 69.7 LOREG),
+ *   par prudence — cf. `PAYS`.
+ *
+ * ## Un compteur par pays (18/10/2026)
+ *
+ * La France, l'Espagne et l'Italie ont chacune leur fichier signé et leurs
+ * compteurs. La France garde ses adresses (`/consultations.json`,
+ * `/api/consultation/voter`) et ses lignes en base (`question` = la date) :
+ * rien ne bouge pour les apps installées. Les autres pays passent par
+ * `/api/consultation/es/voter`… et leurs lignes sont préfixées
+ * (`question` = `es:2026-10-18`), car la même date existe dans chaque pays.
+ * Pas de migration : la colonne est déjà du texte.
  *
  * Ces garde-fous sont AUSSI dans l'app ; ils sont ici d'abord, parce que
  * l'adresse est publique et que n'importe qui peut l'appeler sans l'app.
@@ -65,15 +77,49 @@ const FENETRE_JOURS = 30;
 const MAX_IDS = 40;
 const CACHE_FICHIER = 60 * 1000;         // ms
 
-/** Mêmes dates PROVISOIRES que `reserve.ts` dans l'app — à mettre à jour ensemble. */
-const PERIODES_RESERVE = [
-  { debut: '2027-04-10T00:00:00+02:00', fin: '2027-04-11T20:00:00+02:00' },
-  { debut: '2027-04-24T00:00:00+02:00', fin: '2027-04-25T20:00:00+02:00' }
-];
+/**
+ * Les pays, avec leurs dates de réserve — les MÊMES que `src/data/<pays>/reserve.ts`
+ * dans l'app, à mettre à jour ensemble :
+ * - `reserve` : veille et jour du vote, aucun résultat ;
+ * - `sansSondage` : la période, plus longue, où la loi du pays interdit de
+ *   publier un sondage. Les résultats y sont cachés aussi, par prudence.
+ *
+ * France : dates PROVISOIRES (décret attendu début 2027). Espagne : officielles
+ * (RD 806/2026). Italie : AUCUNE date tant que le décret n'est pas publié — à
+ * remplir AVANT le vote (silenzio elettorale, et 15 jours sans sondage).
+ */
+export const PAYS = {
+  fr: {
+    fichier: '/consultations.json',
+    prefixe: '',
+    reserve: [
+      { debut: '2027-04-10T00:00:00+02:00', fin: '2027-04-11T20:00:00+02:00' },
+      { debut: '2027-04-24T00:00:00+02:00', fin: '2027-04-25T20:00:00+02:00' }
+    ],
+    sansSondage: []
+  },
+  es: {
+    fichier: '/consultations-es.json',
+    prefixe: 'es:',
+    reserve: [{ debut: '2026-11-28T00:00:00+01:00', fin: '2026-11-29T21:00:00+01:00' }],
+    sansSondage: [{ debut: '2026-11-24T00:00:00+01:00', fin: '2026-11-29T21:00:00+01:00' }]
+  },
+  it: {
+    fichier: '/consultations-it.json',
+    prefixe: 'it:',
+    reserve: [],
+    sansSondage: []
+  }
+};
+
+/** La ligne en base d'une question : la date en France, `es:<date>` ailleurs. */
+export function cleQuestion(pays, id) {
+  return PAYS[pays].prefixe + id;
+}
 
 const FORMAT_ID = /^\d{4}-\d{2}-\d{2}$/;
 
-export async function voter(requete, env, { id, choix }) {
+export async function voter(requete, env, { id, choix }, pays = 'fr') {
   if (typeof id !== 'string' || !FORMAT_ID.test(id)) return json({ erreur: 'question' }, 400);
   if (choix !== 'pour' && choix !== 'contre') return json({ erreur: 'choix' }, 400);
 
@@ -86,29 +132,30 @@ export async function voter(requete, env, { id, choix }) {
   // centaines de personnes partagent une adresse.
   const ip = adresseLimite(requete);
   const limiteur = ip.includes(':') ? env.LIMITE_VOTES_V6 : env.LIMITE_VOTES;
-  const { success } = await limiteur.limit({ key: await condense(`${jourUTC()}|${id}|${ip}`) });
+  const { success } = await limiteur.limit({ key: await condense(`${jourUTC()}|${cleQuestion(pays, id)}|${ip}`) });
   if (!success) return json({ erreur: 'trop' }, 429);
 
-  const questions = await questionsPubliees(requete, env);
+  const questions = await questionsPubliees(requete, env, pays);
   if (!questions.has(id) || !dansLaFenetre(id)) return json({ erreur: 'question' }, 404);
 
+  const cle = cleQuestion(pays, id);
   const tranche = Math.floor(Date.now() / 1000 / TRANCHE);
   await env.DB.prepare(
     `INSERT INTO votes (question, choix, tranche, n) VALUES (?1, ?2, ?3, 1)
      ON CONFLICT (question, choix, tranche) DO UPDATE SET n = n + 1`
-  ).bind(id, choix, tranche).run();
+  ).bind(cle, choix, tranche).run();
 
   const { results } = await env.DB.prepare(
     'SELECT choix, n FROM votes WHERE question = ?1 AND tranche = ?2'
-  ).bind(id, tranche).all();
+  ).bind(cle, tranche).all();
   if (estUnPic(results, seuilsPic(env))) {
     await env.DB.prepare('INSERT OR IGNORE INTO gels (question, depuis) VALUES (?1, ?2)')
-      .bind(id, tranche).run();
+      .bind(cle, tranche).run();
   }
   return json({ ok: true });
 }
 
-export async function resultats(requete, env, { ids }) {
+export async function resultats(requete, env, { ids }, pays = 'fr') {
   // Lire coûte aussi (des lectures en base) : même limite par IP que le vote,
   // plus large, pour qu'un script ne puisse pas épuiser le quota gratuit de D1.
   const { success } = await env.LIMITE_LECTURES.limit({ key: await cleLimite(requete) });
@@ -120,25 +167,28 @@ export async function resultats(requete, env, { ids }) {
   const propres = [...new Set(ids.filter((id) => typeof id === 'string' && FORMAT_ID.test(id)))];
   if (propres.length === 0) return json({ erreur: 'ids' }, 400);
 
-  if (enReserve(new Date())) {
+  if (resultatsCoupes(new Date(), pays)) {
     return json({ resultats: Object.fromEntries(propres.map((id) => [id, { etat: 'reserve' }])) });
   }
 
-  const trous = propres.map((_, i) => `?${i + 1}`).join(', ');
+  // On répond par date (ce que l'app connaît), on lit par ligne en base.
+  const cles = propres.map((id) => cleQuestion(pays, id));
+  const trous = cles.map((_, i) => `?${i + 1}`).join(', ');
   const [comptes, gels] = await env.DB.batch([
     env.DB.prepare(
       `SELECT question, choix, SUM(n) AS n FROM votes WHERE question IN (${trous}) GROUP BY question, choix`
-    ).bind(...propres),
-    env.DB.prepare(`SELECT question FROM gels WHERE question IN (${trous})`).bind(...propres)
+    ).bind(...cles),
+    env.DB.prepare(`SELECT question FROM gels WHERE question IN (${trous})`).bind(...cles)
   ]);
 
   const geles = new Set(gels.results.map((l) => l.question));
   const sortie = {};
   for (const id of propres) {
-    if (geles.has(id)) { sortie[id] = { etat: 'gele' }; continue; }
+    const cle = cleQuestion(pays, id);
+    if (geles.has(cle)) { sortie[id] = { etat: 'gele' }; continue; }
     let pour = 0, contre = 0;
     for (const l of comptes.results) {
-      if (l.question !== id) continue;
+      if (l.question !== cle) continue;
       if (l.choix === 'pour') pour = l.n; else if (l.choix === 'contre') contre = l.n;
     }
     sortie[id] = publiable(pour, contre);
@@ -159,18 +209,19 @@ export async function resultats(requete, env, { ids }) {
  *   personne n'y soit reconnaissable ;
  * - au plus `MAX_POINTS` points, en gardant toujours le dernier.
  */
-export async function evolution(requete, env, { id }) {
+export async function evolution(requete, env, { id }, pays = 'fr') {
   const { success } = await env.LIMITE_LECTURES.limit({ key: await cleLimite(requete) });
   if (!success) return json({ erreur: 'trop' }, 429);
   if (typeof id !== 'string' || !FORMAT_ID.test(id)) return json({ erreur: 'question' }, 400);
-  if (enReserve(new Date())) return json({ evolution: { etat: 'reserve' } });
+  if (resultatsCoupes(new Date(), pays)) return json({ evolution: { etat: 'reserve' } });
 
-  const questions = await questionsPubliees(requete, env);
+  const questions = await questionsPubliees(requete, env, pays);
   if (!questions.has(id)) return json({ erreur: 'question' }, 404);
 
+  const cle = cleQuestion(pays, id);
   const [lignes, gel] = await env.DB.batch([
-    env.DB.prepare('SELECT tranche, choix, n FROM votes WHERE question = ?1 ORDER BY tranche').bind(id),
-    env.DB.prepare('SELECT 1 FROM gels WHERE question = ?1').bind(id),
+    env.DB.prepare('SELECT tranche, choix, n FROM votes WHERE question = ?1 ORDER BY tranche').bind(cle),
+    env.DB.prepare('SELECT 1 FROM gels WHERE question = ?1').bind(cle),
   ]);
   if (gel.results.length > 0) return json({ evolution: { etat: 'gele' } });
   return json({ evolution: serie(lignes.results) });
@@ -230,14 +281,24 @@ export function estUnPic(lignes, seuils = seuilsPic()) {
   return total >= seuils.sensMin && Math.max(pour, contre) / total >= seuils.sensPart;
 }
 
-export function enReserve(maintenant) {
+function dansUnePeriode(periodes, maintenant) {
   const t = maintenant.getTime();
-  return PERIODES_RESERVE.some((p) => t >= Date.parse(p.debut) && t <= Date.parse(p.fin));
+  return periodes.some((p) => t >= Date.parse(p.debut) && t <= Date.parse(p.fin));
+}
+
+export function enReserve(maintenant, pays = 'fr') {
+  return dansUnePeriode(PAYS[pays].reserve, maintenant);
+}
+
+/** Réserve, ou jours où la loi du pays interdit de publier un sondage. */
+export function resultatsCoupes(maintenant, pays = 'fr') {
+  return enReserve(maintenant, pays) || dansUnePeriode(PAYS[pays].sansSondage, maintenant);
 }
 
 /* ------------------------------------------------------------------ */
 
-let cache = { lu: 0, ids: new Set() };
+/** Un cache par pays : le fichier espagnol ne doit jamais valider une date française. */
+const caches = {};
 
 /**
  * Les identifiants des questions réellement publiées. Sans ce contrôle,
@@ -247,14 +308,18 @@ let cache = { lu: 0, ids: new Set() };
  * déploiement que ce code. C'est l'APP qui la vérifie — elle seule reçoit le
  * fichier par un chemin qu'un tiers pourrait détourner.
  */
-async function questionsPubliees(requete, env) {
-  if (Date.now() - cache.lu < CACHE_FICHIER) return cache.ids;
-  const rep = await env.ASSETS.fetch(new Request(new URL('/consultations.json', requete.url)));
+async function questionsPubliees(requete, env, pays = 'fr') {
+  const cache = caches[pays];
+  if (cache && Date.now() - cache.lu < CACHE_FICHIER) return cache.ids;
+  const rep = await env.ASSETS.fetch(new Request(new URL(PAYS[pays].fichier, requete.url)));
+  // Pas encore de fichier pour ce pays : aucune question, donc aucun vote.
   if (!rep.ok) return new Set();
   const fichier = await rep.json();
   const contenu = JSON.parse(fichier.contenu);
-  cache = { lu: Date.now(), ids: new Set(contenu.questions.map((q) => q.date)) };
-  return cache.ids;
+  // Un fichier d'un autre pays posé à la mauvaise adresse ne compte pas.
+  if ((contenu.pays ?? 'fr') !== pays) return new Set();
+  caches[pays] = { lu: Date.now(), ids: new Set(contenu.questions.map((q) => q.date)) };
+  return caches[pays].ids;
 }
 
 function dansLaFenetre(id) {
