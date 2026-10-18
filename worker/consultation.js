@@ -38,8 +38,9 @@
  * - Pourcentages entiers, total arrondi à la centaine inférieure.
  * - Rien du tout la veille et le jour du scrutin (loi du 19 juillet 1977,
  *   même dates que `elyzee27/src/lib/reserve.ts`, provisoires elles aussi).
- *   En Espagne, rien non plus les cinq jours sans sondage (art. 69.7 LOREG),
- *   par prudence — cf. `PAYS`.
+ *   En Espagne, aucun pourcentage de toute la période électorale, jusqu'au
+ *   29/11/2026 21 h (option (b) de l'avis juridique, décision de Louis du
+ *   18/10/2026) — cf. `PAYS`. Les avis, eux, sont toujours comptés.
  *
  * ## Un compteur par pays (18/10/2026)
  *
@@ -81,8 +82,10 @@ const CACHE_FICHIER = 60 * 1000;         // ms
  * Les pays, avec leurs dates de réserve — les MÊMES que `src/data/<pays>/reserve.ts`
  * dans l'app, à mettre à jour ensemble :
  * - `reserve` : veille et jour du vote, aucun résultat ;
- * - `sansSondage` : la période, plus longue, où la loi du pays interdit de
- *   publier un sondage. Les résultats y sont cachés aussi, par prudence.
+ * - `sansSondage` : la période, plus longue, où les résultats sont cachés par
+ *   prudence. Espagne : toute la période électorale, de la convocation (BOE du
+ *   6/10) à la fermeture des bureaux des Canaries — la JEC a déjà refusé
+ *   l'argument du panel non représentatif (acuerdo 93/2022).
  *
  * France : dates PROVISOIRES (décret attendu début 2027). Espagne : officielles
  * (RD 806/2026). Italie : AUCUNE date tant que le décret n'est pas publié — à
@@ -102,7 +105,7 @@ export const PAYS = {
     fichier: '/consultations-es.json',
     prefixe: 'es:',
     reserve: [{ debut: '2026-11-28T00:00:00+01:00', fin: '2026-11-29T21:00:00+01:00' }],
-    sansSondage: [{ debut: '2026-11-24T00:00:00+01:00', fin: '2026-11-29T21:00:00+01:00' }]
+    sansSondage: [{ debut: '2026-10-06T00:00:00+02:00', fin: '2026-11-29T21:00:00+01:00' }]
   },
   it: {
     fichier: '/consultations-it.json',

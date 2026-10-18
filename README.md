@@ -237,9 +237,10 @@ Pour surveiller ou dégeler une question espagnole, mêmes commandes que
 ci-dessous avec `question='es:2026-11-02'`.
 
 Réserve : les dates sont dans `PAYS` (`worker/consultation.js`), en double
-avec `elyzee27/src/data/<pays>/reserve.ts`. Espagne : résultats coupés du
-24/11 au 29/11 21 h (art. 69.7 LOREG, prudence). Italie : AUCUNE date, à
-remplir dès le décret de convocation.
+avec `elyzee27/src/data/<pays>/reserve.ts`. Espagne : aucun pourcentage du
+6/10 (convocation) au 29/11 21 h, heure de Madrid — option (b) de l'avis
+juridique, retenue par Louis le 18/10/2026 ; les avis restent comptés.
+Italie : AUCUNE date, à remplir dès le décret de convocation.
 
 ### Quand une question est gelée (« résultats en vérification »)
 
