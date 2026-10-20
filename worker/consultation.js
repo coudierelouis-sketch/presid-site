@@ -77,6 +77,9 @@ function seuilsPic(env) {
 const FENETRE_JOURS = 30;
 const MAX_IDS = 40;
 const CACHE_FICHIER = 60 * 1000;         // ms
+/** Durées du cache des lectures, en secondes (cache de Cloudflare, par centre). */
+const CACHE_RESULTATS = 60;
+const CACHE_EVOLUTION = 5 * 60;
 
 /**
  * Les pays, avec leurs dates de réserve — les MÊMES que `src/data/<pays>/reserve.ts`
@@ -143,10 +146,18 @@ export async function voter(requete, env, { id, choix }, pays = 'fr') {
 
   const cle = cleQuestion(pays, id);
   const tranche = Math.floor(Date.now() / 1000 / TRANCHE);
-  await env.DB.prepare(
-    `INSERT INTO votes (question, choix, tranche, n) VALUES (?1, ?2, ?3, 1)
-     ON CONFLICT (question, choix, tranche) DO UPDATE SET n = n + 1`
-  ).bind(cle, choix, tranche).run();
+  // La tranche (courbe, pics) ET le total (résultats), dans une même
+  // transaction : les deux ne peuvent pas diverger.
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO votes (question, choix, tranche, n) VALUES (?1, ?2, ?3, 1)
+       ON CONFLICT (question, choix, tranche) DO UPDATE SET n = n + 1`
+    ).bind(cle, choix, tranche),
+    env.DB.prepare(
+      `INSERT INTO totaux (question, choix, n) VALUES (?1, ?2, 1)
+       ON CONFLICT (question, choix) DO UPDATE SET n = n + 1`
+    ).bind(cle, choix),
+  ]);
 
   const { results } = await env.DB.prepare(
     'SELECT choix, n FROM votes WHERE question = ?1 AND tranche = ?2'
@@ -174,13 +185,17 @@ export async function resultats(requete, env, { ids }, pays = 'fr') {
     return json({ resultats: Object.fromEntries(propres.map((id) => [id, { etat: 'reserve' }])) });
   }
 
+  // Une minute de cache par pays et par jeu de questions : les mêmes deux ou
+  // trois requêtes reviennent à chaque ouverture de l'app, des milliers de fois.
+  const cleCache = new Request(new URL(`/api/consultation/_cache/${pays}/resultats?ids=${[...propres].sort().join(',')}`, requete.url));
+  const enCache = await caches.default.match(cleCache);
+  if (enCache) return sansCache(enCache);
+
   // On répond par date (ce que l'app connaît), on lit par ligne en base.
   const cles = propres.map((id) => cleQuestion(pays, id));
   const trous = cles.map((_, i) => `?${i + 1}`).join(', ');
   const [comptes, gels] = await env.DB.batch([
-    env.DB.prepare(
-      `SELECT question, choix, SUM(n) AS n FROM votes WHERE question IN (${trous}) GROUP BY question, choix`
-    ).bind(...cles),
+    env.DB.prepare(`SELECT question, choix, n FROM totaux WHERE question IN (${trous})`).bind(...cles),
     env.DB.prepare(`SELECT question FROM gels WHERE question IN (${trous})`).bind(...cles)
   ]);
 
@@ -196,7 +211,9 @@ export async function resultats(requete, env, { ids }, pays = 'fr') {
     }
     sortie[id] = publiable(pour, contre);
   }
-  return json({ resultats: sortie });
+  const reponse = json({ resultats: sortie });
+  await caches.default.put(cleCache, enCachePour(reponse, CACHE_RESULTATS));
+  return reponse;
 }
 
 /**
@@ -222,12 +239,21 @@ export async function evolution(requete, env, { id }, pays = 'fr') {
   if (!questions.has(id)) return json({ erreur: 'question' }, 404);
 
   const cle = cleQuestion(pays, id);
+  // La courbe lit toutes les tranches de la question : en cache cinq minutes,
+  // elle n'a de toute façon un nouveau point qu'au plus toutes les heures.
+  const cleCache = new Request(new URL(`/api/consultation/_cache/${pays}/evolution?id=${id}`, requete.url));
+  const enCache = await caches.default.match(cleCache);
+  if (enCache) return sansCache(enCache);
+
   const [lignes, gel] = await env.DB.batch([
     env.DB.prepare('SELECT tranche, choix, n FROM votes WHERE question = ?1 ORDER BY tranche').bind(cle),
     env.DB.prepare('SELECT 1 FROM gels WHERE question = ?1').bind(cle),
   ]);
-  if (gel.results.length > 0) return json({ evolution: { etat: 'gele' } });
-  return json({ evolution: serie(lignes.results) });
+  const reponse = gel.results.length > 0
+    ? json({ evolution: { etat: 'gele' } })
+    : json({ evolution: serie(lignes.results) });
+  await caches.default.put(cleCache, enCachePour(reponse, CACHE_EVOLUTION));
+  return reponse;
 }
 
 const PAS_AVIS = 25;
@@ -301,7 +327,7 @@ export function resultatsCoupes(maintenant, pays = 'fr') {
 /* ------------------------------------------------------------------ */
 
 /** Un cache par pays : le fichier espagnol ne doit jamais valider une date française. */
-const caches = {};
+const fichiersParPays = {};
 
 /**
  * Les identifiants des questions réellement publiées. Sans ce contrôle,
@@ -312,7 +338,7 @@ const caches = {};
  * fichier par un chemin qu'un tiers pourrait détourner.
  */
 async function questionsPubliees(requete, env, pays = 'fr') {
-  const cache = caches[pays];
+  const cache = fichiersParPays[pays];
   if (cache && Date.now() - cache.lu < CACHE_FICHIER) return cache.ids;
   const rep = await env.ASSETS.fetch(new Request(new URL(PAYS[pays].fichier, requete.url)));
   // Pas encore de fichier pour ce pays : aucune question, donc aucun vote.
@@ -321,8 +347,8 @@ async function questionsPubliees(requete, env, pays = 'fr') {
   const contenu = JSON.parse(fichier.contenu);
   // Un fichier d'un autre pays posé à la mauvaise adresse ne compte pas.
   if ((contenu.pays ?? 'fr') !== pays) return new Set();
-  caches[pays] = { lu: Date.now(), ids: new Set(contenu.questions.map((q) => q.date)) };
-  return caches[pays].ids;
+  fichiersParPays[pays] = { lu: Date.now(), ids: new Set(contenu.questions.map((q) => q.date)) };
+  return fichiersParPays[pays].ids;
 }
 
 function dansLaFenetre(id) {
@@ -359,6 +385,23 @@ async function condense(texte) {
 }
 
 function jourUTC() { return new Date().toISOString().slice(0, 10); }
+
+/**
+ * La copie qu'on range dans le cache de Cloudflare : même corps, mais une
+ * durée de vie. La réponse envoyée à l'app, elle, garde `no-store`.
+ */
+function enCachePour(reponse, secondes) {
+  const copie = new Response(reponse.clone().body, reponse);
+  copie.headers.set('Cache-Control', `public, max-age=${secondes}`);
+  return copie;
+}
+
+/** Une réponse sortie du cache, rendue à l'app comme les autres : `no-store`. */
+function sansCache(reponse) {
+  const copie = new Response(reponse.body, reponse);
+  copie.headers.set('Cache-Control', 'no-store');
+  return copie;
+}
 
 function json(objet, statut = 200) {
   return new Response(JSON.stringify(objet), {
