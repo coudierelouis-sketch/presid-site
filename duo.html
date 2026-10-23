@@ -46,7 +46,7 @@ setTimeout(function () {
 
   <div class="actions">
     <a class="bouton" id="ouvrir" href="presid://duo">Ouvrir dans presid</a>
-    <a class="bouton fantome" href="https://apps.apple.com/fr/app/id6800288453">Installer presid</a>
+    <a class="bouton fantome" id="installer" href="https://apps.apple.com/fr/app/id6800288453">Installer presid</a>
     <a class="bouton fantome" href="index.html">Ce qu'est presid</a>
   </div>
   <p class="sous-bouton">La comparaison se calcule sur les deux téléphones.
@@ -77,6 +77,8 @@ setTimeout(function () {
   /* Le schéma presid:// ouvre l'app quand elle est installée ; le code part
      de la page vers l'app, sur le téléphone, sans passer par un serveur. */
   if (propre) document.getElementById('ouvrir').href = 'presid://duo?c=' + propre;
+  /* Sur Android, « Installer » mène au Play Store plutôt qu'à l'App Store. */
+  if (/Android/i.test(navigator.userAgent)) document.getElementById('installer').href = 'https://play.google.com/store/apps/details?id=com.louis.coudiere.presid';
 })();
 </script>
 

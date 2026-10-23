@@ -44,7 +44,11 @@
     { nom: 'Assez bien', note: 12, examen: 30 }
   ];
   var CLE = 'presid.citoyen.v2';
-  var APP = 'https://apps.apple.com/fr/app/id6800288453';
+  // Sur Android, le Play Store ; partout ailleurs, l'App Store.
+  var APP = /Android/i.test(navigator.userAgent)
+    ? 'https://play.google.com/store/apps/details?id=com.louis.coudiere.presid'
+    : 'https://apps.apple.com/fr/app/id6800288453';
+  [].forEach.call(document.querySelectorAll('a.pont-app'), function (lien) { lien.href = APP; });
   var ADRESSE = 'https://presid.app/citoyen';
   // La page entreprise Presid sur LinkedIn (linkedin.com/company/presidapp).
   // C'est cet identifiant qui fait apparaître le logo de presid comme

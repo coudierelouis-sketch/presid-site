@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.louis.coudiere.presid",
+      "sha256_cert_fingerprints": [
+        "2F:6B:99:4B:7C:FC:AB:BC:43:C3:82:AE:F1:F9:C9:31:69:1D:78:B5:4E:98:5C:79:DE:05:79:37:1F:98:10:18"
+      ]
+    }
+  }
+]
