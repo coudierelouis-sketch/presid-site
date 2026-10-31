@@ -40,19 +40,20 @@ setTimeout(function () {
 <main class="enveloppe etroit texte">
   <div class="riviere">
   <h1 style="font-size:clamp(2rem,5vw,2.75rem);margin-top:2.5rem">Politique de confidentialité</h1>
-  <p class="date">En vigueur depuis le 12 octobre 2026 (version 1.0.6 de
-    l'application ; mise à jour le 13 octobre 2026). Changement :
-    l'application propose une question du jour, à laquelle on peut répondre
-    pour ou contre. Cet avis est compté de façon anonyme sur le
-    serveur de presid (voir « La question du jour »). Tout le reste ne quitte
-    toujours pas votre téléphone.</p>
+  <p class="date">En vigueur à partir de la version [À COMPLÉTER] de
+    l'application ([DATE À COMPLÉTER]). Changement : une fois par jour,
+    l'application envoie, sans identifiant, l'ordre de votre classement des
+    personnalités, pour que presid vérifie que son public n'est pas d'un
+    seul bord (voir « Le classement du jour »). La version précédente, du 12
+    octobre 2026, ajoutait la question du jour.</p>
 
   <div class="encart">
     <p><strong>L'application presid ne collecte aucune donnée qui permette de vous identifier.</strong>
     Pas de compte, pas de mesure d'audience, pas de publicité, pas de traceur.
-    Vos réponses aux sujets ne quittent jamais votre téléphone. La seule chose
-    qui en sort, si vous le choisissez, est un avis pour ou contre à la
-    question du jour, sans aucun identifiant.</p>
+    Vos réponses aux sujets ne quittent jamais votre téléphone. Deux choses
+    en sortent, sans aucun identifiant : un avis pour ou contre à la question
+    du jour, si vous le choisissez, et, une fois par jour, l'ordre de votre
+    classement des personnalités.</p>
   </div>
   </div>
 
@@ -60,8 +61,9 @@ setTimeout(function () {
   <p>Vos réponses aux sujets, votre progression et vos réglages sont stockés
   dans la mémoire locale de l'application, sur votre appareil. Ils ne sont
   transmis à personne — ni à l'éditeur, ni à un tiers. Tout ce qui les
-  concerne fonctionne hors ligne. La question du jour, seule partie de
-  l'application qui utilise le réseau, est décrite plus bas.</p>
+  concerne fonctionne hors ligne. La question du jour et le classement du jour,
+  seules parties de l'application qui utilisent le réseau, sont décrits plus
+  bas.</p>
 
   <h2>Effacement</h2>
   <p>L'onglet Profil comporte un bouton « Effacer mes réponses » qui supprime
@@ -112,6 +114,31 @@ setTimeout(function () {
   compteur ne sait pas qui l'a fait monter. Pour la même raison, un avis
   donné ne peut pas être retiré.</p>
 
+  <h2>Le classement du jour</h2>
+  <p><strong>Pourquoi.</strong> presid se veut un outil neutre, qui parle à
+  tout le monde. Pour le vérifier, l'éditeur regarde quels classements
+  sortent chez ses utilisateurs : si tous penchaient du même côté, cela
+  voudrait dire que l'application ne touche qu'une partie du public.</p>
+  <p><strong>Ce que l'application envoie.</strong> Au plus une fois par jour,
+  et seulement si votre classement compte au moins cinq personnalités : les
+  identifiants des personnalités de votre classement, dans l'ordre (par
+  exemple « 1. X, 2. Y, 3. Z… »). Rien d'autre : ni vos réponses, ni vos
+  pourcentages, ni nom, ni compte, ni identifiant de l'appareil.</p>
+  <p><strong>Ce que le serveur garde.</strong> Un compteur par jour, par
+  personnalité et par rang, par exemple « 31 octobre, X en 2e position :
+  412 ». Les rangs d'un même envoi ne sont reliés entre eux par rien :
+  le serveur ne sait pas qu'ils viennent du même téléphone. Comme pour la
+  question du jour, il ne garde ni votre adresse IP, ni l'heure, et les
+  journaux d'accès sont désactivés ; l'adresse IP ne sert, le temps de la
+  requête, qu'à limiter le nombre d'envois depuis une même adresse.</p>
+  <p><strong>Qui le voit.</strong> Ces compteurs ne sont affichés nulle part,
+  ni dans l'application ni sur ce site : seul l'éditeur les consulte, à usage
+  interne. Ce n'est pas un sondage et ils ne sont pas publiés.</p>
+  <p><strong>Effacement.</strong> Il n'y a rien à effacer côté serveur : un
+  compteur ne sait pas qui l'a fait monter.</p>
+  <!-- [À FAIRE AVANT PUBLICATION] base légale de cet envoi, à faire relire
+       par le juriste : il part sans case à cocher (décision du 31/10/2026). -->
+
   <h2>Les autres sorties vers l'extérieur</h2>
   <p><strong>Ouvrir une source.</strong> Chaque position affichée renvoie au
   document qui la prouve. Toucher ce lien ouvre le site concerné dans votre
@@ -160,16 +187,15 @@ setTimeout(function () {
 
   <h2>Enfants</h2>
   <p>L'application ne s'adresse pas spécifiquement aux enfants. En dehors des
-  compteurs anonymes de la question du jour, alimentés seulement après un
-  accord explicite, elle ne collecte aucune donnée, quel que soit l'âge de la
-  personne qui l'utilise.</p>
+  compteurs anonymes de la question du jour et du classement du jour, elle ne
+  collecte aucune donnée, quel que soit l'âge de la personne qui
+  l'utilise.</p>
 
   <h2>Vos droits</h2>
   <p>Le RGPD ouvre des droits d'accès, de rectification et d'effacement sur
   les données personnelles détenues par un éditeur. presid ne détient aucune
-  donnée vous concernant : l'application n'envoie rien sans votre accord,
-  les avis de la question du jour ne sont que des compteurs qui ne
-  permettent pas de vous identifier, et le serveur de la certification ne
+  donnée vous concernant : les avis de la question du jour et le classement
+  du jour ne sont que des compteurs qui ne permettent pas de vous identifier, et le serveur de la certification ne
   garde ni nom ni coordonnées. Vous gardez la maîtrise
   complète des données locales : le bouton d'effacement dans l'application,
   les réglages de votre navigateur pour le site. Pour toute question,
