@@ -266,3 +266,25 @@ npx wrangler d1 execute presid-consultations --remote --command \
 Les dates de réserve électorale sont en double : `worker/consultation.js` et
 `elyzee27/src/lib/reserve.ts`. Les mettre à jour ensemble à la publication
 du décret.
+
+### Le classement du jour (outil interne, 31/10/2026)
+
+L'app envoie une fois par jour tout son classement à `/api/classement/envoyer`
+(`/api/classement/es/envoyer` pour l'Espagne) ; `worker/classement.js` n'en
+garde que des compteurs (jour, pays, personnalité, rang). La lecture
+(`/api/classement/stats`) exige la clé `STATS_CLE` et n'existe pas tant
+qu'elle n'est pas posée. Le rapport se fait sur le Mac :
+`node elyzee27/scripts/classements.mjs` (France et Espagne dans la même page).
+
+Mise en route, AVANT la sortie de l'app qui envoie :
+
+```
+npx wrangler d1 migrations apply presid-consultations --remote   # table classements
+openssl rand -hex 24                     # la clé : la noter, le script la demandera
+npx wrangler secret put STATS_CLE        # et la coller ici
+npx wrangler deploy
+```
+
+Quota : chaque envoi est UNE écriture D1 (une ligne par jour et par pays,
+dont on incrémente les compteurs), sur le même plafond quotidien que la
+question du jour : 100 000 lignes écrites par jour au forfait gratuit.

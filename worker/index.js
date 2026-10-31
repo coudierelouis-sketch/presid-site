@@ -2,6 +2,8 @@
  * Le serveur de presid.app : il fait la certification Citoyen éclairé et,
  * depuis le 08/10/2026, compte les avis de la question du jour
  * (`worker/consultation.js`, qui documente ce qu'il garde — des compteurs).
+ * Depuis le 31/10/2026, il compte aussi le classement du jour des utilisateurs, pour
+ * un usage interne (`worker/classement.js`, des compteurs lui aussi).
  * Tout le reste du site reste statique et part directement des fichiers
  * (`run_worker_first` ne route ici que /api/*).
  *
@@ -25,6 +27,7 @@
  *   de donnée ici.
  */
 import { BANQUE } from './banque.js';
+import { envoyer, statistiques } from './classement.js';
 import { evolution, resultats, voter } from './consultation.js';
 
 const PAR_MODULE = 5;
@@ -68,6 +71,8 @@ export default {
     // La question du jour : `/api/consultation/<action>` pour la France,
     // `/api/consultation/<pays>/<action>` pour les autres (cf. consultation.js).
     const consultation = /^\/api\/consultation\/(?:(es|it)\/)?(voter|resultats|evolution)$/.exec(url.pathname);
+    // Le classement du jour, outil interne (cf. classement.js) : même découpage par pays.
+    const classement = /^\/api\/classement\/(?:(es)\/)?(envoyer|stats)$/.exec(url.pathname);
 
     try {
       if (consultation) {
@@ -75,6 +80,11 @@ export default {
         if (action === 'voter') return await voter(requete, env, corps, pays);
         if (action === 'resultats') return await resultats(requete, env, corps, pays);
         return await evolution(requete, env, corps, pays);
+      }
+      if (classement) {
+        const [, pays = 'fr', action] = classement;
+        if (action === 'envoyer') return await envoyer(requete, env, corps, pays);
+        return await statistiques(requete, env, corps, pays);
       }
       switch (url.pathname) {
         case '/api/examen/debut': return await debut(env);

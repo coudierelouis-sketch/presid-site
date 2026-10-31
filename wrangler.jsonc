@@ -47,6 +47,20 @@
       "namespace_id": "1003",
       "simple": { "limit": 3, "period": 60 }
     },
+    // Classement du jour (worker/classement.js) : un envoi par jour et par
+    // téléphone, mais à l'ouverture, donc groupés derrière le CGNAT des
+    // opérateurs. IPv4 large, IPv6 par /64. Un refus n'est pas perdu : l'app
+    // réessaie à l'ouverture suivante.
+    {
+      "name": "LIMITE_CLASSEMENTS",
+      "namespace_id": "1004",
+      "simple": { "limit": 60, "period": 60 }
+    },
+    {
+      "name": "LIMITE_CLASSEMENTS_V6",
+      "namespace_id": "1005",
+      "simple": { "limit": 10, "period": 60 }
+    },
     // Lecture des résultats : plus large (l'app relit à chaque ouverture).
     {
       "name": "LIMITE_LECTURES",
